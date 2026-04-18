@@ -2,7 +2,7 @@
 
 A single-file BI dashboard tracking traffic, retention, behavior, RFM segmentation, product heatmaps, and conversion funnels across a **People–Product–Platform** framework.
 
-**Live:** https://wwmelon1019.github.io/ecommerce-kpi-dashboard/
+**Live:** https://ww532.github.io/ecommerce-kpi-dashboard/
 
 ## What this is
 
