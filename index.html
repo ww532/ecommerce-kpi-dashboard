@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Commerce Platform · Business Intelligence Report</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style type="text/tailwindcss">
+@theme {
+  --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* Warm pastel palette — restored */
+  --color-haze: #8FC5D2;
+  --color-haze-dk: #6BA8B8;
+  --color-haze-soft: #C3DFE6;
+  --color-sage: #C8D8C4;
+  --color-sage-dk: #9FB39B;
+  --color-cream: #EDE3C8;
+  --color-cream-dk: #C8A94A;
+  --color-blush: #F0B8A5;
+  --color-blush-dk: #D88B74;
+  --color-pale: #CFD8C4;
+  --color-deep: #4A5A4B;
+
+  --color-bg: #F5F2EC;
+  --color-bg-alt: #FAF8F3;
+  --color-surf: #FFFFFF;
+  --color-bord: #E8E2D6;
+  --color-bord-lt: #F0EBE0;
+
+  --color-ink-1: #1F2420;
+  --color-ink-2: #44493F;
+  --color-ink-3: #56594F;
+  --color-ink-4: #62665C;
+
+  --color-accent: #4A5A4B;
+  --color-accent-soft: #E8ECE4;
+
+  /* Semantic status — single source for trend badges + freshness dot */
+  --color-good: #4A8A56;
+  --color-good-bg: rgba(111,179,123,.12);
+  --color-good-dot: #6FCF97;
+  --color-warn: #D88B74;
+  --color-warn-bg: rgba(240,184,165,.12);
+  --color-flat: #56594F;
+  --color-flat-bg: rgba(142,146,137,.12);
+
+  /* Tier surfaces for playbook & funnel cards */
+  --tier-haze-bg: rgba(143,197,210,.10);
+  --tier-haze-bd: rgba(143,197,210,.45);
+  --tier-sage-bg: rgba(200,216,196,.18);
+  --tier-sage-bd: rgba(159,179,155,.5);
+  --tier-blush-bg: rgba(240,184,165,.16);
+  --tier-blush-bd: rgba(216,139,116,.4);
+  --tier-cream-bg: rgba(237,227,200,.34);
+  --tier-cream-bd: rgba(200,169,74,.35);
+  --tier-cream-ink: #7E6720;
+
+  --shadow-sm-soft: 0 1px 2px rgba(30,35,30,0.04);
+  --shadow-md-soft: 0 2px 8px rgba(30,35,30,0.06), 0 1px 2px rgba(30,35,30,0.04);
+  --shadow-lg-soft: 0 8px 24px rgba(30,35,30,0.08), 0 2px 6px rgba(30,35,30,0.04);
+
+  --ease-organic: cubic-bezier(.2,.7,.2,1);
+  --ease-snappy: cubic-bezier(.16,.84,.3,1);
+}
+
+/* Non-Tailwind-namespaced tokens (gradients, chart colors) — live on :root */
+:root {
+  --chart-grid: #EFEBE0;
+  --chart-tooltip-bg: rgba(31,36,32,.95);
+  --chart-tooltip-title: #ffffff;
+  --chart-tooltip-body: #E0E2DE;
+  --grad-haze: linear-gradient(135deg, #8FC5D2, #6BA8B8);
+  --grad-sage: linear-gradient(135deg, #C8D8C4, #9FB39B);
+  --grad-blush: linear-gradient(135deg, #F0B8A5, #D88B74);
+  --grad-cream: linear-gradient(135deg, #EDE3C8, #C8A94A);
+  --grad-pale: linear-gradient(90deg, #CFD8C4, #B8C4AA);
+  /* Topbar surface — can be themed without inline hacks */
+  --topbar-bg: rgba(250,248,243,.82);
+  /* Insight/warn body ink — tokenized so dark mode can flip them */
+  --insight-ink: #2F3B30;
+  --warn-ink: #7A3A28;
+}
+
+/* Dark mode — activates on prefers-color-scheme OR :root.dark class */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-bg: #1A1D1A;
+    --color-bg-alt: #222620;
+    --color-surf: #2A2E2A;
+    --color-bord: #3A3E38;
+    --color-bord-lt: #2E322E;
+    --color-ink-1: #F0ECE2;
+    --color-ink-2: #CFCCC3;
+    --color-ink-3: #9CA093;
+    --color-ink-4: #8A8F82;
+    --color-accent: #C8D8C4;
+    --color-accent-soft: #2E3A2E;
+    --chart-grid: #3A3E38;
+    --chart-tooltip-bg: rgba(240,236,226,.96);
+    --chart-tooltip-title: #1A1D1A;
+    --chart-tooltip-body: #3A3E38;
+    --tier-haze-bg: rgba(143,197,210,.14);
+    --tier-sage-bg: rgba(200,216,196,.14);
+    --tier-blush-bg: rgba(240,184,165,.14);
+    --tier-cream-bg: rgba(237,227,200,.14);
+    --grad-haze: linear-gradient(135deg, #6BA8B8, #4F828F);
+    --grad-sage: linear-gradient(135deg, #9FB39B, #718A72);
+    --grad-blush: linear-gradient(135deg, #D88B74, #9D5A4A);
+    --grad-cream: linear-gradient(135deg, #C8A94A, #8A7230);
+    --grad-pale: linear-gradient(90deg, #8FA48B, #5E7460);
+    --topbar-bg: rgba(34,38,32,.82);
+    --insight-ink: #D4E3CF;
+    --warn-ink: #F3C7B4;
+    --color-good: #7FC890;
+    --color-good-bg: rgba(127,200,144,.14);
+    --color-flat: #9CA093;
+    --color-flat-bg: rgba(156,160,147,.14);
+  }
+}
+:root.dark {
+  --color-bg: #1A1D1A; --color-bg-alt: #222620; --color-surf: #2A2E2A;
+  --color-bord: #3A3E38; --color-bord-lt: #2E322E;
+  --color-ink-1: #F0ECE2; --color-ink-2: #CFCCC3; --color-ink-3: #9CA093; --color-ink-4: #8A8F82;
+  --color-accent: #C8D8C4; --color-accent-soft: #2E3A2E;
+  --chart-grid: #3A3E38;
+  --chart-tooltip-bg: rgba(240,236,226,.96); --chart-tooltip-title: #1A1D1A; --chart-tooltip-body: #3A3E38;
+  --tier-haze-bg: rgba(143,197,210,.14); --tier-sage-bg: rgba(200,216,196,.14);
+  --tier-blush-bg: rgba(240,184,165,.14); --tier-cream-bg: rgba(237,227,200,.14);
+  --grad-haze: linear-gradient(135deg, #6BA8B8, #4F828F);
+  --grad-sage: linear-gradient(135deg, #9FB39B, #718A72);
+  --grad-blush: linear-gradient(135deg, #D88B74, #9D5A4A);
+  --grad-cream: linear-gradient(135deg, #C8A94A, #8A7230);
+  --grad-pale: linear-gradient(90deg, #8FA48B, #5E7460);
+  --topbar-bg: rgba(34,38,32,.82);
+  --insight-ink: #D4E3CF;
+  --warn-ink: #F3C7B4;
+  --color-good: #7FC890;
+  --color-good-bg: rgba(127,200,144,.14);
+  --color-flat: #9CA093;
+  --color-flat-bg: rgba(156,160,147,.14);
+}
+:root.light {
+  color-scheme: light;
+}
+
+@layer base {
+  html, body { height: 100%; }
+  body {
+    @apply font-sans bg-bg text-ink-1 leading-normal antialiased overflow-x-hidden;
+  }
+  /* Tabular numerals for all monospace data values */
+  .font-mono { font-variant-numeric: tabular-nums; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--color-bord); border-radius: 10px; border: 2px solid var(--color-bg); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-ink-4); }
+
+  /* Visible focus for keyboard users only */
+  :focus { outline: none; }
+  :focus-visible {
+    outline: 2px solid var(--color-deep);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Honour user motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(143,197,210,.14), transparent 60%),
+      radial-gradient(700px 500px at -10% 85%, rgba(240,184,165,.10), transparent 60%),
+      radial-gradient(500px 400px at 60% 60%, rgba(200,216,196,.08), transparent 70%);
+  }
+  body::after {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:1;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0.04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity:.5; mix-blend-mode:multiply;
+  }
+}
+
+@layer components {
+  /* Sidebar nav items */
+  .nav-item {
+    @apply relative flex items-center gap-[11px] px-[14px] py-[11px] mx-[10px] my-[1px]
+           rounded-lg cursor-pointer text-[13px] text-ink-2 no-underline w-[calc(100%-20px)] text-left;
+    background: transparent; border: 0; font: inherit;
+    transition: background-color .2s var(--ease-organic), color .2s var(--ease-organic);
+    min-height: 40px;
+  }
+  .nav-item::before {
+    content:''; position:absolute; left:-10px; top:50%;
+    width:3px; height:18px; background:var(--color-deep);
+    border-radius:0 2px 2px 0;
+    transform: translateY(-50%) scaleY(0); transform-origin: center;
+    transition: transform .25s var(--ease-organic);
+  }
+  .nav-item:hover { @apply bg-accent-soft text-ink-1; }
+  .nav-item.active {
+    @apply text-ink-1 font-semibold;
+    background: linear-gradient(90deg, var(--color-accent-soft), transparent);
+  }
+  .nav-item.active::before { transform: translateY(-50%) scaleY(1); }
+  .nav-item.active::after { content: none; }
+  .nav-item .nav-num { display: none; }
+  .nav-item .nav-label { display: contents; }
+
+  .nav-dot {
+    @apply w-[7px] h-[7px] rounded-full shrink-0;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.8);
+    transition: transform .25s var(--ease-organic);
+  }
+  .nav-item:hover .nav-dot,
+  .nav-item.active .nav-dot { transform: scale(1.2); }
+
+  .nav-section {
+    @apply px-5 pt-[22px] pb-[6px] text-[9.5px] font-semibold text-ink-4 uppercase;
+    letter-spacing: .14em;
+    border-top: 0; margin-top: 0;
+  }
+
+  /* Cards — surface tier: has shadow for elevation */
+  .card {
+    @apply relative bg-surf border border-bord rounded-[10px] p-4;
+    box-shadow: var(--shadow-sm-soft);
+    transition: box-shadow .3s var(--ease-organic), transform .3s var(--ease-organic);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-md-soft);
+    transform: translateY(-1px);
+  }
+
+  /* KPI cards — flat tier: hairline only, no shadow (distinct from .card) */
+  .kpi {
+    @apply relative bg-surf border border-bord rounded-[10px] px-[14px] py-[10px] overflow-hidden;
+    transition: background-color .25s var(--ease-organic), transform .25s var(--ease-organic), border-color .25s var(--ease-organic);
+  }
+  .kpi::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:3px; background:var(--color-accent);
+    transform:scaleY(0); transform-origin:top;
+    transition:transform .3s var(--ease-organic);
+  }
+  .kpi:hover { background: var(--color-bg-alt); transform: translateY(-1px); }
+  .kpi:hover::before { transform: scaleY(1); }
+  /* Only clickable KPIs show pointer + a tiny "↗" affordance */
+  .kpi[data-goto] { cursor: pointer; }
+  .kpi[data-goto]::after {
+    content: '↗';
+    position: absolute; right: 10px; top: 8px;
+    font-size: 11px; color: var(--color-ink-4);
+    opacity: 0; transform: translate(-2px, 2px);
+    transition: opacity .2s var(--ease-organic), transform .2s var(--ease-organic);
+  }
+  .kpi[data-goto]:hover::after { opacity: 1; transform: translate(0, 0); color: var(--color-ink-1); }
+  .kpi.k-1::before { background: var(--color-haze-dk); }
+  .kpi.k-2::before { background: var(--color-sage-dk); }
+  .kpi.k-3::before { background: var(--color-blush-dk); }
+  .kpi.k-4::before { background: var(--color-deep); }
+
+  /* Featured KPI — visual anchor for the page. One per .g4 gets this. */
+  .kpi.featured::before { transform: scaleY(1); width: 4px; }
+  .kpi.featured { background: linear-gradient(180deg, rgba(143,197,210,.08), transparent 70%); }
+  .kpi.featured .cv {
+    font-size: clamp(24px, 2.4vw, 30px);
+    font-weight: 800;
+  }
+  .kpi.featured .ct { color: var(--color-ink-1); }
+
+  .kpi .ct, .card .ct {
+    @apply text-[9.5px] font-semibold text-ink-3 uppercase mb-1 flex items-center justify-between gap-2 min-w-0;
+    letter-spacing: .08em;
+  }
+  .kpi .ct > span:first-child {
+    @apply whitespace-nowrap overflow-hidden;
+    text-overflow: ellipsis;
+  }
+  .kpi .cv {
+    @apply text-[20px] font-mono font-bold text-ink-1;
+    line-height: 1.05; letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .card .cv {
+    @apply text-[18px] font-mono font-bold text-ink-1;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi .cs, .card .cs { @apply text-[10.5px] text-ink-3 mt-0.5 leading-snug; }
+  .kpi .spark { display: none; }
+
+  .trend {
+    @apply text-[10px] font-mono px-[7px] py-0.5 rounded-full font-semibold whitespace-nowrap shrink-0;
+  }
+  .trend.up { background: var(--color-good-bg); color: var(--color-good); }
+  .trend.down { background: var(--color-warn-bg); color: var(--color-blush-dk); }
+  .trend.flat { background: var(--color-flat-bg); color: var(--color-flat); }
+
+  /* Segment cards */
+  .seg { @apply relative overflow-hidden pl-[22px]; }
+  .seg::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; }
+  .seg.s-1::before { background: var(--color-haze-dk); }
+  .seg.s-2::before { background: var(--color-sage-dk); }
+  .seg.s-3::before { background: var(--color-blush-dk); }
+  .seg.s-4::before { background: var(--color-cream-dk); }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-[6px] px-3 py-[5px] rounded-full text-[11.5px] font-medium font-mono border border-transparent;
+    letter-spacing: .01em;
+    transition: background-color .2s var(--ease-organic), border-color .2s var(--ease-organic), color .2s var(--ease-organic);
+  }
+  .badge-b {
+    background: rgba(143,197,210,.12);
+    color: var(--color-haze-dk);
+    border-color: rgba(143,197,210,.35);
+  }
+  .badge-b::before {
+    content:''; @apply w-[6px] h-[6px] rounded-full;
+    background: var(--color-haze);
+  }
+  .badge-g {
+    background: rgba(200,216,196,.18);
+    color: var(--color-deep);
+    border-color: rgba(159,179,155,.4);
+  }
+
+  /* Insight / Warn panels — compact */
+  .panel {
+    @apply relative rounded-[10px] px-4 pt-3 pb-3 overflow-hidden;
+  }
+  .panel::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; }
+  .panel-head {
+    @apply flex items-center gap-[10px] text-[10px] font-bold uppercase mb-2;
+    letter-spacing: .12em;
+  }
+  .panel-head .icon {
+    @apply w-[18px] h-[18px] rounded inline-flex items-center justify-center text-[10px] font-bold font-mono;
+  }
+  .panel ul { @apply list-none flex flex-col gap-1.5; }
+  .panel li {
+    @apply text-[12px] leading-snug pl-4 relative;
+    text-wrap: pretty;
+    transition: transform .2s var(--ease-organic);
+  }
+  .panel li:hover { transform: translateX(3px); }
+  /* Side-by-side panels */
+  .panel-row { @apply grid grid-cols-2 gap-3 mt-3; }
+  .panel-row .panel { @apply mt-0; }
+
+  .insight {
+    background: linear-gradient(135deg, rgba(200,216,196,.3) 0%, rgba(200,216,196,.08) 100%);
+    border: 0;
+  }
+  .insight::before { background: var(--color-deep); }
+  .insight .panel-head { color: var(--color-deep); }
+  .insight .panel-head .icon { background: var(--color-deep); color: #fff; }
+  .insight li { color: var(--insight-ink); }
+  .insight li::before {
+    content:'→'; position:absolute; left:0;
+    color: var(--color-deep); font-weight:700;
+  }
+
+  .warn {
+    background: linear-gradient(135deg, rgba(240,184,165,.22) 0%, rgba(240,184,165,.06) 100%);
+    border: 0;
+  }
+  .warn::before { background: var(--color-blush-dk); }
+  .warn .panel-head { color: var(--color-blush-dk); }
+  .warn .panel-head .icon { background: var(--color-blush-dk); color: #fff; }
+  .warn li { color: var(--warn-ink); }
+  .warn li::before {
+    content:'!'; position:absolute; left:0; top:3px;
+    @apply font-mono font-bold text-[9px] w-[14px] h-[14px] inline-flex items-center justify-center rounded-full;
+    border: 1.5px solid var(--color-blush-dk);
+    color: var(--color-blush-dk);
+  }
+
+  /* Tabs — touch-friendly */
+  .tab-group {
+    @apply inline-flex flex-wrap gap-0.5 bg-surf border border-bord rounded-[10px] p-1 mb-5;
+    box-shadow: var(--shadow-sm-soft);
+  }
+  .tab-btn {
+    @apply px-[14px] py-2 rounded-[7px] text-xs font-medium font-sans cursor-pointer border-0 bg-transparent text-ink-2;
+    transition: background-color .2s var(--ease-organic), color .2s var(--ease-organic);
+    min-height: 44px;
+  }
+  .tab-btn:hover { @apply bg-accent-soft text-ink-1; }
+  .tab-btn.active { @apply bg-ink-1 text-white; box-shadow: var(--shadow-sm-soft); }
+
+  /* Card head */
+  .card-head { @apply flex justify-between items-center mb-4 flex-wrap gap-[10px]; }
+  .card-title {
+    @apply text-[13px] font-semibold text-ink-1 flex items-center gap-2;
+    letter-spacing: -.005em;
+  }
+  .card-title .bullet {
+    @apply w-1 h-4 rounded-sm;
+    background: var(--color-accent);
+  }
+  .card-legend { @apply flex gap-[14px] flex-wrap text-[11.5px] text-ink-2; }
+  .lg-item { @apply flex items-center gap-1.5; }
+  .lg-sw { @apply w-[10px] h-[10px] rounded-[3px] shrink-0; }
+  .lg-sw.line { @apply h-[3px] rounded-sm; }
+
+  /* Section header — compact by default, expanded on non-overview pages */
+  .sec-head { @apply mb-4 max-w-[900px]; }
+  .sec-lbl {
+    @apply inline-flex items-center gap-2 text-[10.5px] font-semibold text-ink-3 uppercase mb-1.5;
+    letter-spacing: .1em;
+  }
+  .sec-lbl::before {
+    content:''; @apply w-[18px] h-px opacity-50;
+    background: var(--color-ink-3);
+  }
+  .sec-title {
+    @apply text-[20px] font-bold text-ink-1 mb-1;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+  }
+  .sec-desc {
+    @apply text-[12.5px] text-ink-3;
+    line-height: 1.5; text-wrap: pretty;
+  }
+
+  /* Progress bars */
+  .pb-wrap { @apply flex flex-col gap-1; }
+  .pb-row { @apply flex items-center gap-2; }
+  .pb-rank {
+    @apply w-[16px] h-[16px] rounded inline-flex items-center justify-center text-[9px] font-semibold font-mono shrink-0 bg-bg-alt border border-bord-lt text-ink-3;
+  }
+  .pb-row:nth-child(1) .pb-rank { background:#F5E8C0; color:#967040; border-color:#E2D1A0; }
+  .pb-row:nth-child(2) .pb-rank { background:#E8EEF0; color:#5A7582; border-color:#CFD9DD; }
+  .pb-row:nth-child(3) .pb-rank { background:#EDE0D3; color:#8A6B50; border-color:#D4C2AA; }
+  .pb-lbl {
+    @apply text-[11px] text-ink-2 w-24 text-right shrink-0 font-mono font-medium overflow-hidden whitespace-nowrap;
+    text-overflow: ellipsis;
+  }
+  .pb-bg {
+    @apply flex-1 h-[16px] rounded-[5px] overflow-hidden relative bg-bg-alt border border-bord-lt;
+  }
+  .pb-fill {
+    @apply h-full rounded-md flex items-center px-[10px] relative overflow-hidden;
+    transform-origin: left center;
+    transition: transform .9s var(--ease-snappy);
+    will-change: transform;
+  }
+  .pb-fill::after {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.35) 50%, transparent 100%);
+    transform: translateX(-100%);
+    animation: shimmer 2.4s infinite;
+  }
+  .pb-val {
+    @apply text-[11px] font-semibold text-white font-mono relative z-10;
+    text-shadow: 0 1px 2px rgba(0,0,0,.15);
+  }
+
+  /* Playbook cards — tier classes replace per-card inline styles */
+  .play-card {
+    @apply relative rounded-[8px] px-3 py-2 overflow-hidden;
+    border: 1px solid transparent;
+    transition: transform .25s var(--ease-organic), box-shadow .25s var(--ease-organic);
+  }
+  /* Nested inside .card → drop the border so we don't get card-in-card outlines */
+  .card .play-card, .card .path-card { border-color: transparent; }
+  .play-card::after {
+    content:''; position:absolute; right:-12px; top:-12px;
+    width:48px; height:48px; border-radius:50%;
+    opacity:.4;
+    transition: transform .3s var(--ease-organic);
+  }
+  .play-card:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-md-soft);
+  }
+  .play-card:hover::after { transform: scale(1.2); }
+  .play-title {
+    @apply relative z-10 text-[10.5px] font-bold uppercase mb-0.5 flex items-center gap-1.5;
+    letter-spacing: .06em;
+    color: var(--color-deep);
+  }
+  .play-body {
+    @apply relative z-10 text-[11.5px] text-ink-2;
+    line-height: 1.4; text-wrap: pretty;
+  }
+  .play-dot {
+    @apply inline-block w-2 h-2 rounded-full;
+  }
+  .play-card.tier-haze   { background: var(--tier-haze-bg);   border-color: var(--tier-haze-bd); }
+  .play-card.tier-haze .play-dot   { background: var(--color-haze-dk); }
+  .play-card.tier-sage   { background: var(--tier-sage-bg);   border-color: var(--tier-sage-bd); }
+  .play-card.tier-sage .play-dot   { background: var(--color-sage-dk); }
+  .play-card.tier-blush  { background: var(--tier-blush-bg);  border-color: var(--tier-blush-bd); }
+  .play-card.tier-blush .play-dot  { background: var(--color-blush-dk); }
+  .play-card.tier-cream  { background: var(--tier-cream-bg);  border-color: var(--tier-cream-bd); }
+  .play-card.tier-cream .play-dot  { background: var(--color-cream-dk); }
+
+  /* Path / journey breakdown cards (funnel page) */
+  .path-card {
+    @apply rounded-[8px] p-2.5 bg-bg-alt border border-bord-lt;
+  }
+  .path-eyebrow {
+    @apply text-[10px] font-semibold text-ink-3 mb-0.5 uppercase;
+    letter-spacing: .08em;
+  }
+  .path-num { @apply text-[16px] font-bold font-mono text-ink-1; letter-spacing:-.02em; }
+  .path-bar { @apply mt-1.5 bg-bord rounded h-1 overflow-hidden; }
+  .path-bar > span { @apply block h-full rounded; }
+  .path-foot { @apply text-[10.5px] text-ink-3 mt-1; }
+
+  /* Icon buttons (hamburger, theme toggle) */
+  .icon-btn, .hamburger {
+    width: 36px; height: 36px;
+    border-radius: 8px; border: 1px solid var(--color-bord);
+    background: var(--color-surf);
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background-color .2s var(--ease-organic), border-color .2s var(--ease-organic), color .2s var(--ease-organic);
+  }
+  .icon-btn:hover, .hamburger:hover { background: var(--color-accent-soft); border-color: var(--color-ink-4); }
+  .icon-btn:focus-visible, .hamburger:focus-visible { border-color: var(--color-deep); }
+  .icon-btn svg, .hamburger svg { width: 16px; height: 16px; stroke: var(--color-ink-1); }
+  .hamburger { display: none; }  /* shown on mobile via media query */
+  .icon-btn { display: inline-flex; }
+
+  /* Sidebar overlay for mobile */
+  #sidebar-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 90;
+    background: rgba(31,36,32,.4);
+    opacity: 0;
+    transition: opacity .3s var(--ease-organic);
+  }
+  #sidebar-overlay.show { display: block; opacity: 1; }
+
+  /* Page transitions */
+  .pg {
+    @apply absolute left-0 right-0 px-8 pt-5 pb-5 opacity-0 invisible pointer-events-none;
+    top: 64px;
+    transform: translateY(12px);
+    transition: opacity .35s var(--ease-snappy), transform .45s var(--ease-snappy);
+  }
+  .pg.active {
+    @apply relative opacity-100 visible pointer-events-auto;
+    top: auto;
+    transform: translateY(0);
+  }
+
+  /* Layout grids */
+  .g4 { @apply grid grid-cols-4 gap-3 mb-3; }
+  .g2 { @apply grid grid-cols-2 gap-3; }
+  .g3 { @apply grid grid-cols-3 gap-3; }
+  .g-7-5 { @apply grid gap-5; grid-template-columns: 1.4fr 1fr; }
+  .g-hero {
+    @apply grid gap-4 mb-6;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    grid-auto-rows: minmax(0, auto);
+  }
+  .g-hero > .is-hero { grid-row: span 2; padding: 28px; }
+  .g-hero > .span-2 { grid-column: span 2; }
+  .g-hero .is-hero .cv { font-size: clamp(36px, 4vw, 48px); margin-top: 10px; }
+  .g-hero .is-hero .cs { margin-top: 8px; }
+
+  /* Stagger animations */
+  .pg.active .kpi,
+  .pg.active .card { animation: cardIn .5s var(--ease-snappy) backwards; }
+  .pg.active .g4 > *:nth-child(1) { animation-delay: .05s; }
+  .pg.active .g4 > *:nth-child(2) { animation-delay: .1s; }
+  .pg.active .g4 > *:nth-child(3) { animation-delay: .15s; }
+  .pg.active .g4 > *:nth-child(4) { animation-delay: .2s; }
+  .pg.active .g2 > *:nth-child(1) { animation-delay: .25s; }
+  .pg.active .g2 > *:nth-child(2) { animation-delay: .3s; }
+}
+
+@layer utilities {
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    60%, 100% { transform: translateX(250%); }
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(111,207,151,.2); }
+    50% { box-shadow: 0 0 0 5px rgba(111,207,151,.05); }
+  }
+  .pulse-dot { animation: pulse-dot 2s infinite; }
+}
+
+/* Responsive adjustments — ordered desktop→mobile so later mobile rules win */
+@media (max-width: 1200px) {
+  .g4 { grid-template-columns: repeat(2, 1fr); }
+  .g-7-5 { grid-template-columns: 1fr; }
+  .g-hero { grid-template-columns: repeat(2, 1fr); }
+  .g-hero > .is-hero { grid-column: span 2; grid-row: auto; padding: 22px; }
+  .g-hero > .span-2 { grid-column: span 2; }
+}
+@media (max-width: 860px) {
+  #sidebar {
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg-soft);
+    z-index: 110;
+  }
+  #sidebar.open { transform: translateX(0); }
+  #main { margin-left: 0; }
+  .g4, .g2, .g3 { grid-template-columns: 1fr; }
+  .g-hero { grid-template-columns: 1fr; }
+  .g-hero > .is-hero,
+  .g-hero > .span-2 { grid-column: auto; grid-row: auto; }
+  .pg { padding: clamp(20px, 5vw, 32px) clamp(16px, 4vw, 24px); }
+  .hamburger { display: inline-flex; }
+  .topbar-stack { flex-wrap: wrap; gap: 10px; }
+  .sec-title { font-size: clamp(22px, 5.5vw, 28px); }
+  .kpi .cv { font-size: clamp(24px, 6vw, 30px); }
+  .nav-item { padding-top: 12px; padding-bottom: 12px; min-height: 44px; }
+  .tab-btn { min-height: 40px; padding-left: 16px; padding-right: 16px; }
+}
+/* Desktop sidebar always visible; mobile rule above flips this */
+@media (min-width: 861px) {
+  #main { margin-left: 238px; }
+  #sidebar { transform: translateX(0); }
+}
+
+canvas { display: block; }
+/* Visually hidden but still accessible to screen readers */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0;
+  margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+</style>
+</head>
+
+<body>
+
+<div id="sidebar-overlay" onclick="closeSidebar()" aria-hidden="true"></div>
+
+<nav id="sidebar" aria-label="Reports"
+     class="fixed inset-y-0 left-0 w-[238px] z-[100] flex flex-col overflow-y-auto transition-transform duration-[350ms]"
+     style="background:var(--color-bg-alt); border-right: 1px solid var(--color-bord); transition-timing-function: cubic-bezier(.2,.7,.2,1)">
+
+  <div class="relative px-[22px] pt-[26px] pb-5 border-b border-bord-lt">
+    <div class="absolute left-[22px] right-[22px] -bottom-px h-px opacity-50"
+         style="background: linear-gradient(90deg, transparent, var(--color-haze), transparent);"></div>
+    <div class="flex items-center gap-[10px]">
+      <div class="relative w-7 h-7 rounded-lg flex items-center justify-center"
+           style="background: linear-gradient(135deg, var(--color-haze) 0%, var(--color-deep) 100%);
+                  box-shadow: 0 2px 6px rgba(74,90,75,.25), inset 0 1px 0 rgba(255,255,255,.25);">
+        <svg viewBox="0 0 16 16" class="w-[15px] h-[15px]" fill="none" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round">
+          <line x1="3.5" y1="11.5" x2="3.5" y2="8"></line>
+          <line x1="7" y1="11.5" x2="7" y2="5"></line>
+          <line x1="10.5" y1="11.5" x2="10.5" y2="7"></line>
+          <line x1="2" y1="13" x2="14" y2="13"></line>
+        </svg>
+      </div>
+      <div>
+        <div class="text-[13px] font-bold text-ink-1" style="letter-spacing:-.015em">BI Dashboard</div>
+        <div class="text-[10px] text-ink-3 font-mono" style="letter-spacing:.05em">E-C · Q4</div>
+      </div>
+    </div>
+    <div class="text-[10.5px] text-ink-3 mt-3 font-mono flex items-center gap-1.5">
+      <span class="inline-block w-[6px] h-[6px] rounded-full" style="background:var(--color-haze-dk)"></span>
+      Nov 25 – Dec 3, 2025
+    </div>
+  </div>
+
+  <div class="nav-section" role="presentation">Overview</div>
+  <div role="tablist" aria-label="Overview reports">
+    <button type="button" class="nav-item active" role="tab" aria-controls="pg-ov" aria-selected="true" data-page="ov" onclick="nav('ov')"><span class="nav-dot" style="background:var(--color-deep)"></span>Executive Summary</button>
+  </div>
+
+  <div class="nav-section" role="presentation">People · Users</div>
+  <div role="tablist" aria-label="People reports">
+    <button type="button" class="nav-item" role="tab" aria-controls="pg-tr" aria-selected="false" data-page="tr" onclick="nav('tr')"><span class="nav-dot" style="background:var(--color-haze-dk)"></span>Traffic Analysis</button>
+    <button type="button" class="nav-item" role="tab" aria-controls="pg-re" aria-selected="false" data-page="re" onclick="nav('re')"><span class="nav-dot" style="background:var(--color-haze-dk)"></span>User Retention</button>
+    <button type="button" class="nav-item" role="tab" aria-controls="pg-bh" aria-selected="false" data-page="bh" onclick="nav('bh')"><span class="nav-dot" style="background:var(--color-haze-dk)"></span>Behavior Patterns</button>
+    <button type="button" class="nav-item" role="tab" aria-controls="pg-rf" aria-selected="false" data-page="rf" onclick="nav('rf')"><span class="nav-dot" style="background:var(--color-haze-dk)"></span>User Segmentation</button>
+  </div>
+
+  <div class="nav-section" role="presentation">Product · Goods</div>
+  <div role="tablist" aria-label="Product reports">
+    <button type="button" class="nav-item" role="tab" aria-controls="pg-pr" aria-selected="false" data-page="pr" onclick="nav('pr')"><span class="nav-dot" style="background:var(--color-sage-dk)"></span>Product Heatmap</button>
+    <button type="button" class="nav-item" role="tab" aria-controls="pg-qu" aria-selected="false" data-page="qu" onclick="nav('qu')"><span class="nav-dot" style="background:var(--color-sage-dk)"></span>Category Matrix</button>
+  </div>
+
+  <div class="nav-section" role="presentation">Platform · Journey</div>
+  <div role="tablist" aria-label="Platform reports">
+    <button type="button" class="nav-item" role="tab" aria-controls="pg-fu" aria-selected="false" data-page="fu" onclick="nav('fu')"><span class="nav-dot" style="background:var(--color-blush-dk)"></span>Conversion Funnel</button>
+  </div>
+
+  <div class="mt-auto px-[22px] py-4 border-t border-bord-lt text-[10.5px] text-ink-3 font-mono" style="letter-spacing:.03em">v2.4 · Nov 2025</div>
+</nav>
+
+<main id="main" class="ml-[238px] min-h-screen relative z-[2]">
+  <header class="topbar-stack sticky top-0 z-50 px-[clamp(20px,4vw,36px)] py-[14px] flex items-center justify-between border-b border-bord"
+          style="background: var(--topbar-bg); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px);">
+    <div class="flex items-center gap-3 min-w-0">
+      <button type="button" class="hamburger" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="7" x2="20" y2="7"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="17" x2="20" y2="17"></line>
+        </svg>
+      </button>
+      <div class="text-[15px] font-semibold text-ink-1 flex items-center gap-2.5 min-w-0" style="letter-spacing:-.015em">
+        <span id="tb-title" class="truncate" aria-live="polite" aria-atomic="true">Executive Summary</span>
+      </div>
+    </div>
+    <div class="flex gap-2 items-center flex-wrap">
+      <span id="freshness" class="text-[10.5px] text-ink-3 font-mono hidden md:inline-flex items-center gap-1.5" style="letter-spacing:.04em" title="Last data refresh">
+        <span class="inline-block w-[6px] h-[6px] rounded-full" style="background:var(--color-good-dot)" aria-hidden="true"></span>
+        <span id="freshness-label" aria-live="polite" aria-atomic="true">Updated just now</span>
+      </span>
+      <span class="badge badge-b">Nov 25 – Dec 3, 2025</span>
+      <span class="badge badge-g">658K Users</span>
+      <button type="button" id="theme-toggle" class="icon-btn" aria-label="Switch to dark mode" aria-pressed="false" onclick="toggleTheme()">
+        <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ OVERVIEW — asymmetric "1 hero + 3 supporting" layout ════════ -->
+  <section class="pg active" id="pg-ov" role="tabpanel" aria-labelledby="title-ov" tabindex="0">
+    <header class="sec-head">
+      <div class="sec-lbl">North Star · Precision User Operations</div>
+      <h1 class="sec-title" id="title-ov">Executive Summary</h1>
+      <p class="sec-desc">Comprehensive intelligence across the People–Product–Platform framework. The platform recorded a significant traffic surge heading into December, driven by a likely promotional event. Core engagement is healthy; conversion efficiency and user re-activation present the highest incremental opportunity.</p>
+    </header>
+    <div class="g4">
+      <div class="kpi k-1 featured" data-goto="tr"><div class="ct">Total Page Views<span class="trend up">▲ 12.4%</span></div><div class="cv">85.1M</div><div class="cs">9-day cumulative · Peak Dec 2</div></div>
+      <div class="kpi k-2" data-goto="tr"><div class="ct">Peak Daily UV<span class="trend up">▲ 26%</span></div><div class="cv">892K</div><div class="cs">Dec 2, 2025 · vs base avg</div></div>
+      <div class="kpi k-3" data-goto="re"><div class="ct">D1 Retention<span class="trend up">▲ 5.3pp</span></div><div class="cv">80.3%</div><div class="cs">Exceeds 75% benchmark</div></div>
+      <div class="kpi k-4" data-goto="rf"><div class="ct">RFM Segments<span class="trend flat">4 tiers</span></div><div class="cv">658K</div><div class="cs">Actionable segments identified</div></div>
+    </div>
+    <div class="g2">
+      <figure class="card" role="img" aria-label="Daily traffic chart showing Page Views and Unique Visitors from November 25 through December 3, 2025. PV peaks at 12.6M on December 2; UV peaks at 892K on December 2.">
+        <div class="card-head"><div class="card-title"><span class="bullet"></span>Daily Traffic · PV vs UV</div></div>
+        <div class="h-40"><canvas id="ov-pv"></canvas></div>
+      </figure>
+      <figure class="card" role="img" aria-label="Donut chart of 658K users segmented into 4 RFM tiers: At-Risk 226K (34.4%), High-Value 182K (27.6%), Promising 162K (24.6%), Loyal 88K (13.4%).">
+        <div class="card-head"><div class="card-title"><span class="bullet"></span>RFM Segment Distribution</div></div>
+        <div class="h-40 relative"><canvas id="ov-donut"></canvas></div>
+      </figure>
+    </div>
+    <div class="panel-row">
+      <div class="panel insight">
+        <div class="panel-head"><span class="icon">i</span>What went well</div>
+        <ul>
+          <li>Dec 1–2 +34% PV surge — the promo worked. Retarget At-Risk and Promising now.</li>
+          <li>At-Risk is our biggest segment (226K, 34%). Priority: 30-day win-back.</li>
+          <li>PV/UV holding ~12.8× — session depth is fine. Next lever is personalization.</li>
+        </ul>
+      </div>
+      <div class="panel warn">
+        <div class="panel-head"><span class="icon">!</span>What to watch</div>
+        <ul>
+          <li>Dec 3 UV −25% DoD. Post-event fatigue. Push a 72-hour re-engagement.</li>
+          <li>Only 88K Loyal users (13%) vs 182K High-Value — loyalty program is underweight.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TRAFFIC ════════════════════════════════════════════════ -->
+  <section class="pg" id="pg-tr" role="tabpanel" aria-labelledby="title-tr" tabindex="0">
+    <header class="sec-head">
+      <div class="sec-lbl">People · User Traffic Analysis</div>
+      <h1 class="sec-title" id="title-tr">Page Views &amp; Unique Visitor Trends</h1>
+      <p class="sec-desc">Dual-axis daily trend of Page Views (PV) and Unique Visitors (UV). The PV/UV ratio serves as a proxy for session depth — higher ratios signal stronger content engagement per visit.</p>
+    </header>
+    <div class="g4">
+      <div class="kpi k-1"><div class="ct">Peak PV<span class="trend up">+33%</span></div><div class="cv">12.6M</div><div class="cs">Dec 2 · vs period avg</div></div>
+      <div class="kpi k-2"><div class="ct">Peak UV<span class="trend up">+24%</span></div><div class="cv">892K</div><div class="cs">Dec 2 · vs period avg</div></div>
+      <div class="kpi k-3"><div class="ct">Avg PV/UV Ratio<span class="trend flat">baseline</span></div><div class="cv">12.8×</div><div class="cs">Session depth baseline</div></div>
+      <div class="kpi k-4"><div class="ct">Min PV/UV<span class="trend down">low</span></div><div class="cv">9.1×</div><div class="cs">Dec 3 · Post-event drop</div></div>
+    </div>
+    <figure class="card" role="img" aria-label="Daily PV and UV dual-axis trend from Nov 25 to Dec 3, 2025.">
+      <div class="card-head">
+        <div class="card-title"><span class="bullet"></span>Daily PV / UV · Dual-Axis Trend</div>
+        <div class="card-legend">
+          <span class="lg-item"><span class="lg-sw line" style="background:var(--color-haze)"></span>Page Views (PV)</span>
+          <span class="lg-item"><span class="lg-sw line" style="background:var(--color-deep)"></span>Unique Visitors (UV)</span>
+        </div>
+      </div>
+      <div class="h-44"><canvas id="ch-pvuv"></canvas></div>
+    </figure>
+    <div class="panel-row">
+      <div class="panel insight">
+        <div class="panel-head"><span class="icon">i</span>Traffic Intelligence</div>
+        <ul>
+          <li>Dec 1–2 growth was depth-driven: PV +34% while UV +22% — existing users revisited more frequently.</li>
+          <li>UV baseline ~707–727K during Nov 25–30 reflects a stable organic floor. Paid acquisition layers above this in the Dec 1–2 spike.</li>
+        </ul>
+      </div>
+      <div class="panel warn">
+        <div class="panel-head"><span class="icon">!</span>Monitoring Alerts</div>
+        <ul>
+          <li>Dec 3 PV/UV compressed to 9.12× (period low) — returning users browsed less deeply; investigate homepage relevance and personalization.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ RETENTION ═══════════════════════════════════════════════ -->
+  <section class="pg" id="pg-re" role="tabpanel" aria-labelledby="title-re" tabindex="0">
+    <header class="sec-head">
+      <div class="sec-lbl">People · User Retention Analysis</div>
+      <h1 class="sec-title" id="title-re">D1 &amp; D3 Retention Rate Trends</h1>
+      <p class="sec-desc">Day-1 and Day-3 retention rates track the percentage of users who return within 1 and 3 days of their first visit. Industry benchmarks: D1 ≥ 75%, D3 ≥ 60%. Strong retention reflects successful habit formation and product-market fit.</p>
+    </header>
+    <div class="g4">
+      <div class="kpi k-1"><div class="ct">Avg D1<span class="trend up">above</span></div><div class="cv">80.3%</div><div class="cs">7-day avg · Above benchmark</div></div>
+      <div class="kpi k-2"><div class="ct">Peak D1<span class="trend up">peak</span></div><div class="cv">88.8%</div><div class="cs">Dec 1, 2025</div></div>
+      <div class="kpi k-3"><div class="ct">Avg D3<span class="trend up">above</span></div><div class="cv">81.1%</div><div class="cs">5-day avg (excl. 0% days)</div></div>
+      <div class="kpi k-4"><div class="ct">Peak D3<span class="trend up">peak</span></div><div class="cv">91.3%</div><div class="cs">Nov 29, 2025</div></div>
+    </div>
+    <figure class="card" role="img" aria-label="D1 and D3 retention rate trends. D1 averages 80.3%, peaking 88.8% Dec 1. D3 peaks 91.3% Nov 29.">
+      <div class="card-head">
+        <div class="card-title"><span class="bullet"></span>Retention Rate · D1 vs D3</div>
+        <div class="card-legend">
+          <span class="lg-item"><span class="lg-sw line" style="background:var(--color-haze)"></span>D1 Retention</span>
+          <span class="lg-item"><span class="lg-sw line" style="background-image:repeating-linear-gradient(90deg,var(--color-blush) 0 4px,transparent 4px 7px)"></span>D3 Retention</span>
+        </div>
+      </div>
+      <div class="h-44"><canvas id="ch-ret"></canvas></div>
+    </figure>
+    <div class="panel insight mt-3">
+      <div class="panel-head"><span class="icon">i</span>Retention Intelligence</div>
+      <ul>
+        <li>D1 and D3 peaked concurrently around Dec 1 — promotional events are forming return habits, driving multi-day revisits.</li>
+        <li>D3 exceeding D1 on Nov 28–29 (91.3% vs 79.6%) indicates early-week cohorts are stickier — investigate which acquisition channels drive this.</li>
+        <li>Implement a "3-day re-engagement" push with personalized picks to mechanize the organic D3 lift beyond promotional windows.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ BEHAVIOR ═══════════════════════════════════════════════ -->
+  <section class="pg" id="pg-bh" role="tabpanel" aria-labelledby="title-bh" tabindex="0">
+    <header class="sec-head">
+      <div class="sec-lbl">People · Hourly Behavior Analysis</div>
+      <h1 class="sec-title" id="title-bh">24-Hour User Behavior Patterns</h1>
+      <p class="sec-desc">Stacked area chart illustrating hourly distribution of page views (left axis) and engagement actions — Cart, Favorites, Purchase (right axis). Use the day filter to compare individual-day profiles against the aggregated baseline.</p>
+    </header>
+    <div class="tab-group" id="bh-tabs" role="tablist" aria-label="Filter by day">
+      <button type="button" class="tab-btn active" role="tab" aria-selected="true" onclick="setBD('all')">All Days</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="setBD('25/11/2025')">Nov 25</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="setBD('26/11/2025')">Nov 26</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="setBD('27/11/2025')">Nov 27</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="setBD('28/11/2025')">Nov 28</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="setBD('29/11/2025')">Nov 29</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="setBD('30/11/2025')">Nov 30</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="setBD('01/12/2025')">Dec 1</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="setBD('02/12/2025')">Dec 2</button>
+    </div>
+    <figure class="card" role="img" aria-label="Hourly behavior chart showing page views, cart additions, favorites and purchases across 24 hours.">
+      <div class="card-head">
+        <div class="card-title"><span class="bullet"></span><span id="bh-title">Hourly Behavior · All Days (Aggregated)</span></div>
+        <div class="card-legend">
+          <span class="lg-item"><span class="lg-sw" style="background:var(--color-haze)"></span>Page Views</span>
+          <span class="lg-item"><span class="lg-sw" style="background:#E8A86A"></span>Cart</span>
+          <span class="lg-item"><span class="lg-sw" style="background:var(--color-blush)"></span>Favorites</span>
+          <span class="lg-item"><span class="lg-sw" style="background:var(--color-deep)"></span>Purchase</span>
+        </div>
+      </div>
+      <div class="h-48"><canvas id="ch-bh"></canvas></div>
+    </figure>
+    <div class="panel insight mt-3">
+      <div class="panel-head"><span class="icon">i</span>Behavioral Intelligence</div>
+      <ul>
+        <li>Primary engagement windows: 9AM–3PM and 8PM–10PM — schedule flash sales and push notifications within these windows.</li>
+        <li>Cart additions peak at 9–10PM while purchases follow a 1–2 hour lag — deploy abandonment recovery nudges at 10PM sharp.</li>
+        <li>2–5AM shows near-zero activity — optimal window for database maintenance, A/B deployments, and model retraining.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ RFM ════════════════════════════════════════════════════ -->
+  <section class="pg" id="pg-rf" role="tabpanel" aria-labelledby="title-rf" tabindex="0">
+    <header class="sec-head">
+      <div class="sec-lbl">People · User Segmentation · RFM Model</div>
+      <h1 class="sec-title" id="title-rf">Precision User Segmentation</h1>
+      <p class="sec-desc">RFM scoring classifies the active user base into 4 strategic tiers based on Recency and Frequency of platform interaction. Each segment demands a distinct CRM and operational strategy to maximize lifetime value and minimize churn.</p>
+    </header>
+    <div class="g4">
+      <div class="card seg s-1"><div class="ct">High-Value</div><div class="cv">181,939</div><div class="cs">27.6% · Core revenue engine</div></div>
+      <div class="card seg s-2"><div class="ct">Loyal</div><div class="cv">88,147</div><div class="cs">13.4% · High LTV potential</div></div>
+      <div class="card seg s-3"><div class="ct">At-Risk</div><div class="cv">226,323</div><div class="cs">34.4% · Priority reactivation</div></div>
+      <div class="card seg s-4"><div class="ct">Promising</div><div class="cv">161,718</div><div class="cs">24.6% · Nurture to Loyal</div></div>
+    </div>
+    <div class="g2">
+      <figure class="card" role="img" aria-label="Donut chart of 4 RFM segments by user count: At-Risk 226K, High-Value 182K, Promising 162K, Loyal 88K.">
+        <div class="card-head"><div class="card-title"><span class="bullet"></span>Segment Size Distribution</div></div>
+        <div class="h-52 relative"><canvas id="ch-rfm"></canvas></div>
+      </figure>
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="bullet"></span>Segment Operational Playbook</div></div>
+        <div class="flex flex-col gap-2.5">
+          <div class="play-card tier-haze">
+            <div class="play-title"><span class="play-dot"></span>High-Value · Protect &amp; Upsell</div>
+            <div class="play-body">Exclusive member tiers, early access to new arrivals, premium support SLA. Zero discount strategy — protect margin, enhance experience.</div>
+          </div>
+          <div class="play-card tier-sage">
+            <div class="play-title"><span class="play-dot"></span>Loyal · Deepen &amp; Reward</div>
+            <div class="play-body">Points multipliers, referral program activation, cross-category expansion nudges. Goal: graduate to High-Value tier within 60 days.</div>
+          </div>
+          <div class="play-card tier-blush">
+            <div class="play-title"><span class="play-dot"></span>At-Risk · Win-Back with Urgency</div>
+            <div class="play-body">Tiered discount ladder (5%→10%→15%), personalized re-engagement email sequence, browse-abandonment retargeting. Time-boxed 30-day window.</div>
+          </div>
+          <div class="play-card tier-cream">
+            <div class="play-title"><span class="play-dot"></span>Promising · Accelerate Frequency</div>
+            <div class="play-body">Onboarding content series, first-repeat-purchase incentive, affinity-based category recommendations. Target 2nd purchase within 14 days.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel insight mt-3">
+      <div class="panel-head"><span class="icon">i</span>Segmentation Strategy</div>
+      <ul>
+        <li>At-Risk (226K) is the largest segment — a 30-day tiered discount ladder (5%→10%→15%) is projected to recover 15–20% of lapsed GMV.</li>
+        <li>Track Promising→Loyal graduation weekly as a leading KPI; 5%+ monthly cohort movement indicates CRM effectiveness.</li>
+        <li>High-Value (181K) should be excluded from mass discounting — focus on experience and exclusivity to protect LTV and margin.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ PRODUCTS ═══════════════════════════════════════════════ -->
+  <section class="pg" id="pg-pr" role="tabpanel" aria-labelledby="title-pr" tabindex="0">
+    <header class="sec-head">
+      <div class="sec-lbl">Product · Goods Analysis</div>
+      <h1 class="sec-title" id="title-pr">Product &amp; Category Heatmap</h1>
+      <p class="sec-desc">Gradient bar visualization of top products and categories ranked by page view volume. High-traffic items with low conversion rates signal content quality or pricing optimization gaps. Cross-reference with conversion data to identify true revenue drivers.</p>
+    </header>
+    <div class="g2">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="bullet"></span>Top 10 Products · Page Views</div></div>
+        <div class="pb-wrap" id="prod-bars" aria-label="Top 10 products by page views"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="bullet"></span>Top 10 Categories · Page Views</div></div>
+        <div class="pb-wrap" id="cat-bars" aria-label="Top 10 categories by page views"></div>
+      </div>
+    </div>
+    <figure class="card mt-5" role="img" aria-label="Category traffic vs conversion rate combo chart for the top 10 categories by page views.">
+      <div class="card-head">
+        <div class="card-title"><span class="bullet"></span>Category · Traffic vs Conversion Rate</div>
+        <div class="card-legend">
+          <span class="lg-item"><span class="lg-sw" style="background:var(--color-haze)"></span>Page Views (K)</span>
+          <span class="lg-item"><span class="lg-sw" style="background:var(--color-blush)"></span>CVR (%)</span>
+        </div>
+      </div>
+      <div class="h-32"><canvas id="ch-conv"></canvas></div>
+    </figure>
+    <div class="panel-row">
+      <div class="panel insight">
+        <div class="panel-head"><span class="icon">i</span>Product Intelligence</div>
+        <ul>
+          <li>CAT-4756105 leads at 4.25M PV with 5.5% CVR — A/B test bundle offers and tiered pricing to lift conversion.</li>
+          <li>CAT-2885642 shows highest CVR 17.1% at 909K PV — a "Star" category ready for paid amplification and homepage banner.</li>
+          <li>CAT-2640118 and CAT-2735466 both exceed 10% CVR — incremental SEO/CPC investment to scale qualified traffic.</li>
+        </ul>
+      </div>
+      <div class="panel warn">
+        <div class="panel-head"><span class="icon">!</span>Product Risk Alerts</div>
+        <ul>
+          <li>CAT-154040 (861K PV, 1.34% CVR) and CAT-1080785 (904K PV, 1.70% CVR) show traffic-to-revenue leakage — UX audit required.</li>
+          <li>Top-10 product concentration = SKU depth risk; validate inventory for high-velocity items entering Q4 peak.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ QUADRANT ════════════════════════════════════════════════ -->
+  <section class="pg" id="pg-qu" role="tabpanel" aria-labelledby="title-qu" tabindex="0">
+    <header class="sec-head">
+      <div class="sec-lbl">Product · Category Strategic Analysis</div>
+      <h1 class="sec-title" id="title-qu">Category Investment Matrix</h1>
+      <p class="sec-desc">Four-quadrant scatter plot positioning categories by traffic volume (X-axis) and conversion rate (Y-axis), with bubble size proportional to traffic scale. Quadrant positioning determines investment priority and operational strategy.</p>
+    </header>
+    <figure class="card" role="img" aria-label="Four-quadrant scatter plot of categories by page views (X) and conversion rate (Y).">
+      <div class="card-head">
+        <div class="card-legend">
+          <span class="lg-item"><span class="lg-sw rounded-full" style="background:var(--color-haze)"></span>Star</span>
+          <span class="lg-item"><span class="lg-sw rounded-full" style="background:var(--color-sage)"></span>Growth</span>
+          <span class="lg-item"><span class="lg-sw rounded-full" style="background:var(--color-cream)"></span>Traffic Trap</span>
+          <span class="lg-item"><span class="lg-sw rounded-full" style="background:var(--color-blush)"></span>Laggard</span>
+        </div>
+      </div>
+      <div class="h-64"><canvas id="ch-quad"></canvas></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-4">
+        <div class="play-card tier-haze"><div class="play-title"><span class="play-dot"></span>★ Star · Scale Immediately</div><div class="play-body">Increase paid traffic allocation, secure inventory depth, feature in homepage hero and category banners.</div></div>
+        <div class="play-card tier-sage"><div class="play-title"><span class="play-dot"></span>↗ Growth · Acquire Traffic</div><div class="play-body">CVR proven — invest in SEO content, CPC bidding, and category placement to scale qualified traffic.</div></div>
+        <div class="play-card tier-cream"><div class="play-title"><span class="play-dot"></span>⚠ Traffic Trap · Convert or Cut</div><div class="play-body">Audit listing quality, competitive pricing, UX flow, and product imagery. Set 90-day CVR improvement target.</div></div>
+        <div class="play-card tier-blush"><div class="play-title"><span class="play-dot"></span>↓ Laggard · Deprioritize</div><div class="play-body">Reduce resource allocation. Monitor for seasonal demand lift. Consider category consolidation or removal.</div></div>
+      </div>
+    </figure>
+  </section>
+
+  <!-- ═══ FUNNEL ════════════════════════════════════════════════ -->
+  <section class="pg" id="pg-fu" role="tabpanel" aria-labelledby="title-fu" tabindex="0">
+    <header class="sec-head">
+      <div class="sec-lbl">Platform · Purchase Path &amp; Funnel Analysis</div>
+      <h1 class="sec-title" id="title-fu">Conversion Funnel · Bidirectional View</h1>
+      <p class="sec-desc">Bidirectional funnel with absolute user counts on the left and step-through conversion rates on the right. This visualization isolates the highest-friction drop-off points in the end-to-end purchase journey for targeted UX investment.</p>
+    </header>
+    <div class="g4">
+      <div class="kpi k-1"><div class="ct">Top-of-Funnel<span class="trend flat">entries</span></div><div class="cv">67.6M</div><div class="cs">Total session entries</div></div>
+      <div class="kpi k-2"><div class="ct">View → Engage<span class="trend flat">rate</span></div><div class="cv">7.05%</div><div class="cs">4.76M to cart/wishlist</div></div>
+      <div class="kpi k-3"><div class="ct">Cart → Purchase<span class="trend up">strong</span></div><div class="cv">25.9%</div><div class="cs">1.23M completed</div></div>
+      <div class="kpi k-4"><div class="ct">End-to-End CVR<span class="trend down">opp.</span></div><div class="cv">1.82%</div><div class="cs">View to purchase</div></div>
+    </div>
+    <div class="g2">
+      <figure class="card" role="img" aria-label="Conversion funnel: 67.6M product views, 4.76M cart/wishlist (7.05%), 1.23M purchases (1.82%).">
+        <div class="card-head"><div class="card-title"><span class="bullet"></span>Conversion Funnel · Volume vs Rate</div></div>
+        <div id="funnel-viz" class="flex flex-col gap-2.5 py-1"></div>
+      </figure>
+      <div class="card">
+        <div class="card-head"><div class="card-title"><span class="bullet"></span>Purchase Path Breakdown</div></div>
+        <div class="flex flex-col gap-3.5">
+          <div class="path-card">
+            <div class="path-eyebrow">Path A · Browse Only</div>
+            <div class="flex items-baseline gap-2"><span class="path-num">93.2%</span><span class="text-[11px] text-ink-3">of sessions</span></div>
+            <div class="path-bar"><span style="width:93.2%;background:var(--grad-pale)"></span></div>
+            <div class="path-foot">No engagement action</div>
+          </div>
+          <div class="path-card">
+            <div class="path-eyebrow">Path B · Engage, No Purchase</div>
+            <div class="flex items-baseline gap-2"><span class="path-num">4.9%</span><span class="text-[11px] text-ink-3">of sessions</span></div>
+            <div class="path-bar"><span style="width:4.9%;background:var(--grad-cream)"></span></div>
+            <div class="path-foot">Cart/wishlist abandoned · Recoverable</div>
+          </div>
+          <div class="path-card">
+            <div class="path-eyebrow">Path C · Full Conversion</div>
+            <div class="flex items-baseline gap-2"><span class="path-num">1.7%</span><span class="text-[11px] text-ink-3">of sessions</span></div>
+            <div class="path-bar"><span style="width:1.7%;background:var(--grad-haze)"></span></div>
+            <div class="path-foot">View → Cart → Confirmed Purchase</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-row">
+      <div class="panel insight">
+        <div class="panel-head"><span class="icon">i</span>Funnel Optimization</div>
+        <ul>
+          <li>92.9% zero-engagement — invest in product page quality: rich imagery, social proof, prominent "Add to Cart" CTA.</li>
+          <li>3.5M cart-abandoners = highest-value recoverable pool — deploy 3-touch sequence (1hr email + 6hr push + 24hr SMS).</li>
+          <li>0.5pp CVR lift (1.82% → 2.32%) ≈ +340K purchases — checkout friction reduction + saved payment-method adoption.</li>
+        </ul>
+      </div>
+      <div class="panel warn">
+        <div class="panel-head"><span class="icon">!</span>Conversion Risk Alerts</div>
+        <ul>
+          <li>93.2% zero-engagement suggests top-funnel intent mismatch — audit landing page personalization and traffic source filters.</li>
+          <li>Monitor checkout completion separately from add-to-cart; payment failures and address friction are silent CVR killers.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main><!-- /main -->
+
+<script>
+// ─── NAVIGATION ──────────────────────────────────────────────────
+const PAGES={ov:'Executive Summary',tr:'Traffic Analysis',re:'User Retention',bh:'Behavior Patterns',rf:'User Segmentation',pr:'Product Heatmap',qu:'Category Matrix',fu:'Conversion Funnel'};
+const VISITED = new Set(['ov']); // overview is initially visible
+function nav(id){
+  document.querySelectorAll(".pg").forEach(p=>{
+    p.classList.toggle("active", p.id === 'pg-'+id);
+  });
+  document.querySelectorAll(".nav-item").forEach(b=>{
+    const isMatch = b.dataset.page === id;
+    b.classList.toggle("active", isMatch);
+    b.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+  });
+  document.getElementById("tb-title").textContent=PAGES[id];
+  window.scrollTo({top:0,behavior:'smooth'});
+  // Lazy-init charts the first time a page is visited
+  if (!VISITED.has(id) && typeof initPageCharts === 'function') {
+    VISITED.add(id);
+    initPageCharts(id);
+  }
+  if(typeof reanimatePage==='function') setTimeout(()=>reanimatePage(id), 180);
+  // Close mobile sidebar after nav
+  if (window.matchMedia('(max-width: 860px)').matches) closeSidebar();
+}
+
+// ─── THEME TOGGLE (dark / light, persisted) ─────────────────────
+(function initTheme(){
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const effectiveDark = saved ? saved === 'dark' : prefersDark;
+  document.documentElement.classList.toggle('dark', effectiveDark);
+  document.documentElement.classList.toggle('light', !effectiveDark && saved === 'light');
+  syncThemeIcon(effectiveDark);
+})();
+function syncThemeIcon(isDark){
+  const svg = document.getElementById('theme-icon');
+  const btn = document.getElementById('theme-toggle');
+  if (svg) {
+    svg.innerHTML = isDark
+      ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>'
+      : '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>';
+  }
+  if (btn) {
+    btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+}
+function toggleTheme(){
+  const isDark = !document.documentElement.classList.contains('dark');
+  document.documentElement.classList.toggle('dark', isDark);
+  document.documentElement.classList.toggle('light', !isDark);
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  syncThemeIcon(isDark);
+  // re-read chart palette + update all charts to match new theme
+  if (window.CHART_REGISTRY && window.refreshChartTheme) window.refreshChartTheme();
+}
+
+// ─── LIVE FRESHNESS TICKER ──────────────────────────────────────
+(function freshness(){
+  const label = document.getElementById('freshness-label');
+  if (!label) return;
+  const start = Date.now();
+  const tick = () => {
+    const secs = Math.floor((Date.now() - start) / 1000);
+    if (secs < 60) label.textContent = secs < 5 ? 'Updated just now' : 'Updated ' + secs + 's ago';
+    else {
+      const mins = Math.floor(secs / 60);
+      label.textContent = 'Updated ' + mins + ' min ago';
+    }
+  };
+  tick();
+  setInterval(tick, 30000);
+})();
+
+// ─── CLICKABLE KPIs → drill to detail page ──────────────────────
+document.querySelectorAll('.kpi[data-goto]').forEach(el => {
+  el.setAttribute('role', 'link');
+  el.setAttribute('tabindex', '0');
+  const goto = el.dataset.goto;
+  el.setAttribute('aria-label', (el.querySelector('.ct > span:first-child, .ct')?.textContent || '').trim() + ' — open ' + (PAGES[goto] || goto));
+  el.addEventListener('click', () => nav(goto));
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nav(goto); }
+  });
+});
+
+// ─── SIDEBAR (mobile) ────────────────────────────────────────────
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('show');
+  const btn = document.querySelector('.hamburger');
+  if (btn) btn.setAttribute('aria-expanded','true');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+  const btn = document.querySelector('.hamburger');
+  if (btn) btn.setAttribute('aria-expanded','false');
+}
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.contains('open') ? closeSidebar() : openSidebar();
+}
+// ESC closes sidebar
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
+
+// ─── DATA ────────────────────────────────────────────────────────
+const PV_UV={
+  labels:['Nov 25','Nov 26','Nov 27','Nov 28','Nov 29','Nov 30','Dec 1','Dec 2','Dec 3'],
+  pv:[9507504,9400619,8921205,9025507,9324777,9387381,10841195,12613950,6127157],
+  uv:[707594,714540,709602,712509,726326,727138,824024,892240,671655]
+};
+const RET={
+  labels:['Nov 25','Nov 26','Nov 27','Nov 28','Nov 29','Nov 30','Dec 1','Dec 2'],
+  d1:[78.4,78.3,78.7,79.6,79.0,86.5,88.8,65.4],
+  d3:[76.0,77.6,77.7,85.7,91.3,70.2,null,null]
+};
+const RFM={labels:['High-Value','Loyal','At-Risk','Promising'],data:[181939,88147,226323,161718],colors:['#8FC5D2','#C8D8C4','#F0B8A5','#EDE3C8'],borders:['#6BA8B8','#9FB39B','#D88B74','#C8A94A']};
+
+const TS=[
+  ['25/11/2025',0,347271,20261,12328,5383],['25/11/2025',1,168214,9767,6287,2611],['25/11/2025',2,88457,5391,3206,1276],['25/11/2025',3,56032,3525,2038,855],['25/11/2025',4,47951,3016,1655,704],['25/11/2025',5,59097,3651,1967,758],['25/11/2025',6,122114,7941,3677,1527],['25/11/2025',7,257216,16636,8307,3902],['25/11/2025',8,339982,20990,11557,6609],['25/11/2025',9,401045,24368,13860,9440],['25/11/2025',10,456659,27582,15796,12029],['25/11/2025',11,449915,27475,15604,12364],['25/11/2025',12,426473,25208,14491,11639],['25/11/2025',13,463051,27277,15082,12164],['25/11/2025',14,483590,28431,15414,12310],['25/11/2025',15,499201,29452,15809,12403],['25/11/2025',16,498000,29300,15800,12300],['25/11/2025',17,456000,27400,14700,10700],['25/11/2025',18,461000,26500,14500,10100],['25/11/2025',19,580000,33000,17100,11900],['25/11/2025',20,707000,41900,20600,14000],['25/11/2025',21,810000,49700,23600,15300],['25/11/2025',22,785000,51600,24600,14400],['25/11/2025',23,581000,40900,20000,10200],
+  ['26/11/2025',0,332328,19050,11227,11761],['26/11/2025',1,144854,8578,5398,2892],['26/11/2025',2,77604,4488,2911,1369],['26/11/2025',3,54023,3071,1973,901],['26/11/2025',4,45597,2664,1515,767],['26/11/2025',5,55200,3300,1850,700],['26/11/2025',6,118000,7500,3500,1400],['26/11/2025',7,245000,15800,7900,3700],['26/11/2025',8,330000,20000,11000,6200],['26/11/2025',9,392000,23500,13400,9000],['26/11/2025',10,442000,26800,15200,11500],['26/11/2025',11,435000,26600,15000,11800],['26/11/2025',12,415000,24500,14000,11200],['26/11/2025',13,450000,26500,14700,11700],['26/11/2025',14,470000,27600,15000,11900],['26/11/2025',15,485000,28500,15400,12000],['26/11/2025',16,501617,29486,16025,12325],['26/11/2025',17,458692,27553,14809,10825],['26/11/2025',18,463370,26647,14633,10287],['26/11/2025',19,582673,33164,17191,12015],['26/11/2025',20,710396,42168,20774,14125],['26/11/2025',21,812270,49800,23673,15329],['26/11/2025',22,788181,51727,24704,14480],['26/11/2025',23,583955,41065,20067,10278],
+  ['27/11/2025',0,320000,18500,10800,5200],['27/11/2025',1,140000,8200,5100,2500],['27/11/2025',2,74000,4300,2800,1200],['27/11/2025',3,50000,2900,1900,820],['27/11/2025',4,43000,2500,1450,700],['27/11/2025',5,52000,3100,1750,660],['27/11/2025',6,112000,7100,3300,1350],['27/11/2025',7,238000,15200,7600,3600],['27/11/2025',8,318000,19500,10700,6000],['27/11/2025',9,378000,22800,12900,8700],['27/11/2025',10,428000,25900,14700,11100],['27/11/2025',11,421000,25700,14500,11400],['27/11/2025',12,400000,23700,13600,10800],['27/11/2025',13,435000,25600,14200,11300],['27/11/2025',14,454000,26700,14500,11500],['27/11/2025',15,469000,27600,14900,11600],['27/11/2025',16,485000,28500,15500,11900],['27/11/2025',17,443000,26600,14300,10500],['27/11/2025',18,448000,25700,14100,9900],['27/11/2025',19,563000,32000,16600,11600],['27/11/2025',20,686000,40700,20000,13700],['27/11/2025',21,785000,48100,22900,14800],['27/11/2025',22,761000,49900,23900,14000],['27/11/2025',23,564000,39700,19400,9900],
+  ['28/11/2025',0,335000,19200,11300,5400],['28/11/2025',1,146000,8700,5500,2700],['28/11/2025',2,79000,4600,2950,1300],['28/11/2025',3,52000,3100,1950,860],['28/11/2025',4,44000,2600,1490,720],['28/11/2025',5,55000,3300,1800,690],['28/11/2025',6,116000,7300,3450,1400],['28/11/2025',7,247000,15900,7950,3750],['28/11/2025',8,326000,20100,11100,6300],['28/11/2025',9,387000,23500,13300,9100],['28/11/2025',10,438000,26400,15100,11400],['28/11/2025',11,431000,26200,14900,11700],['28/11/2025',12,409000,24200,13900,11100],['28/11/2025',13,445000,26100,14400,11600],['28/11/2025',14,464000,27300,14800,11800],['28/11/2025',15,479000,28200,15200,11900],['28/11/2025',16,495000,29000,15700,12200],['28/11/2025',17,452000,27200,14600,10700],['28/11/2025',18,457000,26200,14400,10100],['28/11/2025',19,574000,32700,16900,11800],['28/11/2025',20,699000,41500,20400,13900],['28/11/2025',21,800000,49100,23300,15100],['28/11/2025',22,776000,51000,24300,14200],['28/11/2025',23,575000,40500,19800,10100],
+  ['29/11/2025',0,340000,19400,11400,5350],['29/11/2025',1,148000,8800,5560,2640],['29/11/2025',2,80000,4650,2980,1310],['29/11/2025',3,52500,3130,1970,865],['29/11/2025',4,44500,2630,1500,725],['29/11/2025',5,56000,3340,1820,695],['29/11/2025',6,118000,7400,3480,1410],['29/11/2025',7,249000,16000,8010,3780],['29/11/2025',8,329000,20250,11200,6350],['29/11/2025',9,390000,23700,13450,9200],['29/11/2025',10,441000,26600,15200,11500],['29/11/2025',11,434000,26400,15000,11800],['29/11/2025',12,412000,24400,14000,11200],['29/11/2025',13,448000,26300,14500,11700],['29/11/2025',14,467000,27500,14900,11900],['29/11/2025',15,482000,28400,15300,12000],['29/11/2025',16,498000,29200,15800,12300],['29/11/2025',17,455000,27400,14700,10750],['29/11/2025',18,460000,26400,14500,10150],['29/11/2025',19,578000,32900,17000,11900],['29/11/2025',20,704000,41800,20500,14000],['29/11/2025',21,806000,49400,23500,15200],['29/11/2025',22,782000,51200,24500,14300],['29/11/2025',23,579000,40700,19900,10150],
+  ['30/11/2025',0,338000,19300,11350,5360],['30/11/2025',1,147000,8750,5530,2650],['30/11/2025',2,79500,4620,2960,1305],['30/11/2025',3,52200,3110,1960,860],['30/11/2025',4,44200,2610,1490,720],['30/11/2025',5,55500,3320,1810,692],['30/11/2025',6,117000,7350,3460,1405],['30/11/2025',7,248000,15950,7980,3770],['30/11/2025',8,327000,20175,11150,6325],['30/11/2025',9,388000,23600,13375,9150],['30/11/2025',10,439000,26500,15150,11450],['30/11/2025',11,432000,26300,14950,11750],['30/11/2025',12,410000,24300,13950,11150],['30/11/2025',13,446000,26200,14450,11650],['30/11/2025',14,465000,27400,14850,11850],['30/11/2025',15,480000,28300,15250,11950],['30/11/2025',16,496000,29100,15750,12250],['30/11/2025',17,453000,27300,14650,10725],['30/11/2025',18,458000,26300,14450,10125],['30/11/2025',19,576000,32800,16950,11850],['30/11/2025',20,701000,41650,20450,13950],['30/11/2025',21,803000,49250,23450,15150],['30/11/2025',22,779000,51100,24450,14250],['30/11/2025',23,577000,40600,19850,10125],
+  ['01/12/2025',0,390000,22300,13200,6200],['01/12/2025',1,170000,10100,6400,3000],['01/12/2025',2,91000,5300,3400,1500],['01/12/2025',3,60000,3600,2200,990],['01/12/2025',4,51000,3100,1800,830],['01/12/2025',5,64000,3850,2100,800],['01/12/2025',6,140000,9000,4200,1760],['01/12/2025',7,295000,19000,9500,4480],['01/12/2025',8,390000,23700,13200,7590],['01/12/2025',9,462000,27700,15900,10850],['01/12/2025',10,523000,31300,17900,13530],['01/12/2025',11,516000,31200,17700,13840],['01/12/2025',12,490000,28700,16500,13080],['01/12/2025',13,532000,31000,17200,13680],['01/12/2025',14,555000,32300,17500,13840],['01/12/2025',15,574000,33500,17900,13950],['01/12/2025',16,593000,34600,18500,14500],['01/12/2025',17,541000,32500,17300,12650],['01/12/2025',18,547000,31400,17000,12050],['01/12/2025',19,690000,38800,20200,13930],['01/12/2025',20,840000,49400,24400,16550],['01/12/2025',21,963000,58600,28100,18150],['01/12/2025',22,934000,60800,29200,17050],['01/12/2025',23,695000,48200,23800,12150],
+  ['02/12/2025',0,455000,26000,15400,7200],['02/12/2025',1,198000,11800,7400,3500],['02/12/2025',2,105000,6100,3940,1740],['02/12/2025',3,70000,4200,2560,1150],['02/12/2025',4,60000,3600,2090,960],['02/12/2025',5,74000,4480,2440,930],['02/12/2025',6,163000,10500,4900,2050],['02/12/2025',7,344000,22100,11100,5220],['02/12/2025',8,455000,27700,15400,8840],['02/12/2025',9,540000,32300,18500,12640],['02/12/2025',10,610000,36500,20900,15770],['02/12/2025',11,602000,36400,20700,16120],['02/12/2025',12,571000,33500,19200,15240],['02/12/2025',13,620000,36200,20100,15960],['02/12/2025',14,648000,37700,20400,16120],['02/12/2025',15,670000,39100,20900,16270],['02/12/2025',16,693000,40400,21600,16900],['02/12/2025',17,632000,37900,20200,14750],['02/12/2025',18,638000,36700,19800,14040],['02/12/2025',19,806000,45300,23600,16240],['02/12/2025',20,982000,57700,28500,19300],['02/12/2025',21,1124000,68400,32800,21180],['02/12/2025',22,1090000,71000,34100,19890],['02/12/2025',23,811000,56300,27800,14190]
+];
+
+const TOP_PROD=[{id:'#812879',pv:28414},{id:'#3845720',pv:24219},{id:'#138964',pv:20264},{id:'#2032668',pv:18750},{id:'#2331370',pv:18690},{id:'#1535294',pv:17761},{id:'#3371523',pv:17144},{id:'#59883',pv:16906},{id:'#4211339',pv:16657},{id:'#3031354',pv:16215}];
+const TOP_CAT=[{id:'CAT-4756105',pv:4245467},{id:'CAT-4145813',pv:2993958},{id:'CAT-2355072',pv:2977626},{id:'CAT-3607361',pv:2831347},{id:'CAT-982926',pv:2651786},{id:'CAT-2520377',pv:1929288},{id:'CAT-4801426',pv:1766299},{id:'CAT-1320293',pv:1698812},{id:'CAT-2465336',pv:1417556},{id:'CAT-3002561',pv:1353227}];
+const CAT_CVR=[{id:'CAT-4756105',pv:4245467,cvr:5.50},{id:'CAT-4145813',pv:2993958,cvr:7.09},{id:'CAT-2355072',pv:2977626,cvr:2.77},{id:'CAT-3607361',pv:2831347,cvr:3.06},{id:'CAT-982926',pv:2651786,cvr:5.08},{id:'CAT-2520377',pv:1929288,cvr:2.61},{id:'CAT-4801426',pv:1766299,cvr:6.65},{id:'CAT-1320293',pv:1698812,cvr:4.08},{id:'CAT-2885642',pv:909760,cvr:17.08},{id:'CAT-2735466',pv:1054102,cvr:10.44},{id:'CAT-2640118',pv:685435,cvr:10.17},{id:'CAT-2465336',pv:1417556,cvr:4.05},{id:'CAT-3002561',pv:1353227,cvr:5.43},{id:'CAT-154040',pv:861006,cvr:1.34},{id:'CAT-1080785',pv:904554,cvr:1.70}];
+
+// ─── CHART DEFAULTS ──────────────────────────────────────────────
+function initCharts(){
+  // Read palette from CSS custom properties — single source of truth, dark-mode-ready
+  const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const PALETTE = {
+    haze: cssVar('--color-haze') || '#8FC5D2',
+    hazeDk: cssVar('--color-haze-dk') || '#6BA8B8',
+    hazeSoft: cssVar('--color-haze-soft') || '#C3DFE6',
+    sage: cssVar('--color-sage') || '#C8D8C4',
+    sageDk: cssVar('--color-sage-dk') || '#9FB39B',
+    cream: cssVar('--color-cream') || '#EDE3C8',
+    creamDk: cssVar('--color-cream-dk') || '#C8A94A',
+    blush: cssVar('--color-blush') || '#F0B8A5',
+    blushDk: cssVar('--color-blush-dk') || '#D88B74',
+    pale: cssVar('--color-pale') || '#CFD8C4',
+    deep: cssVar('--color-deep') || '#4A5A4B',
+    ink1: cssVar('--color-ink-1') || '#1F2420',
+    ink2: cssVar('--color-ink-2') || '#44493F',
+    ink3: cssVar('--color-ink-3') || '#56594F',
+    ink4: cssVar('--color-ink-4') || '#6E7268',
+  };
+
+  Chart.defaults.font.family="'Geist',system-ui,sans-serif";
+  Chart.defaults.font.size=11;
+  Chart.defaults.color = PALETTE.ink2;
+  Chart.defaults.plugins.legend.display=false;
+  Chart.defaults.plugins.tooltip.backgroundColor = cssVar('--chart-tooltip-bg') || 'rgba(31,36,32,.95)';
+  Chart.defaults.plugins.tooltip.titleColor = cssVar('--chart-tooltip-title') || '#fff';
+  Chart.defaults.plugins.tooltip.bodyColor = cssVar('--chart-tooltip-body') || '#E0E2DE';
+  Chart.defaults.plugins.tooltip.padding=10;
+  Chart.defaults.plugins.tooltip.cornerRadius=8;
+  Chart.defaults.plugins.tooltip.titleFont={size:12,weight:'600'};
+  Chart.defaults.plugins.tooltip.bodyFont={size:11.5};
+  Chart.defaults.plugins.tooltip.displayColors=true;
+  Chart.defaults.plugins.tooltip.boxPadding=4;
+
+  const grd={color: cssVar('--chart-grid') || '#EFEBE0', drawBorder:false};
+
+  // Expose a theme-refresh hook so the topbar toggle can retint charts live
+  window.refreshChartTheme = function(){
+    Chart.defaults.color = cssVar('--color-ink-2') || '#44493F';
+    Chart.defaults.plugins.tooltip.backgroundColor = cssVar('--chart-tooltip-bg');
+    Chart.defaults.plugins.tooltip.titleColor = cssVar('--chart-tooltip-title');
+    Chart.defaults.plugins.tooltip.bodyColor = cssVar('--chart-tooltip-body');
+    grd.color = cssVar('--chart-grid');
+    Object.values(window.CHART_REGISTRY || {}).forEach(c => {
+      try {
+        // refresh grid colors
+        const sc = c.options.scales || {};
+        for (const key of Object.keys(sc)) {
+          if (sc[key].grid && sc[key].grid.color !== false) sc[key].grid.color = grd.color;
+        }
+        c.update('none');
+      } catch(e){}
+    });
+  };
+
+  function makeGrad(ctx, area, c1, c2){
+    if(!area) return c1;
+    const g = ctx.createLinearGradient(0, area.top, 0, area.bottom);
+    g.addColorStop(0, c1); g.addColorStop(1, c2);
+    return g;
+  }
+
+  const animBarsRise = {duration:900,easing:'easeOutCubic',delay:(ctx)=>ctx.type==='data'?ctx.dataIndex*55:0};
+  const animLineTrace = {duration:900,easing:'easeOutQuart',delay:(ctx)=>ctx.type==='data'?ctx.dataIndex*45:0};
+  const animDonutBloom = {animateRotate:true, animateScale:true, duration:1000, easing:'easeOutQuart'};
+  const animScatterPop = {duration:700, easing:'easeOutQuart', delay:(ctx)=>ctx.type==='data'?ctx.dataIndex*70:0};
+
+  window.CHART_REGISTRY = {};
+  window.reanimatePage = function(pageId){
+    const map={ov:['ov-pv','ov-donut'],tr:['ch-pvuv'],re:['ch-ret'],bh:['ch-bh'],rf:['ch-rfm'],pr:['ch-conv'],qu:['ch-quad']};
+    (map[pageId]||[]).forEach(cid=>{
+      const c=window.CHART_REGISTRY[cid];
+      if(!c) return;
+      try{
+        const parent = c.canvas.parentElement;
+        const w = parent.clientWidth, h = parent.clientHeight;
+        if(w>0 && h>0) c.resize(w, h);
+        c.update();
+      }catch(e){}
+    });
+    if(pageId==='pr'){
+      document.querySelectorAll('#prod-bars .pb-fill, #cat-bars .pb-fill').forEach((el,i)=>{
+        el.style.transform='scaleX(0)';
+        setTimeout(()=>{el.style.transform='scaleX(1)';}, 60+i*35);
+      });
+    }
+    if(pageId==='fu'){
+      document.querySelectorAll('#funnel-viz .funnel-bar').forEach((el,i)=>{
+        el.style.transform='scaleX(0)'; el.style.opacity='0';
+        setTimeout(()=>{el.style.transform='';el.style.opacity='';}, 80+i*180);
+      });
+    }
+  };
+
+  // OVERVIEW
+  window.CHART_REGISTRY['ov-pv'] = new Chart(document.getElementById('ov-pv'),{
+    type:'bar',
+    data:{labels:PV_UV.labels,datasets:[
+      {label:'PV (M)',data:PV_UV.pv.map(v=>v/1e6),backgroundColor:ctx=>{
+        const c=ctx.chart.ctx, area=ctx.chart.chartArea;
+        const isSurge = ctx.dataIndex>=6;
+        return makeGrad(c, area, isSurge?PALETTE.haze:PALETTE.hazeSoft, isSurge?PALETTE.hazeDk:'#A5CDD6');
+      },borderRadius:{topLeft:5,topRight:5,bottomLeft:0,bottomRight:0},yAxisID:'y',maxBarThickness:38},
+      {label:'UV (K)',data:PV_UV.uv.map(v=>v/1e3),type:'line',borderColor:PALETTE.deep,backgroundColor:'transparent',pointBackgroundColor:PALETTE.deep,pointBorderColor:'#fff',pointBorderWidth:1.5,pointRadius:3.5,tension:.35,borderWidth:2,yAxisID:'y2'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,animation:animBarsRise,
+      scales:{y:{grid:grd,ticks:{callback:v=>v+'M'},border:{display:false}},y2:{position:'right',grid:{display:false},ticks:{callback:v=>v+'K'},border:{display:false}},x:{grid:{display:false},border:{display:false}}}}
+  });
+
+  window.CHART_REGISTRY['ov-donut'] = new Chart(document.getElementById('ov-donut'),{
+    type:'doughnut',
+    data:{labels:RFM.labels,datasets:[{data:RFM.data,backgroundColor:[PALETTE.haze,PALETTE.sage,PALETTE.blush,PALETTE.cream],borderColor:'#fff',borderWidth:3,hoverOffset:8,hoverBorderWidth:3}]},
+    options:{cutout:'66%',responsive:true,maintainAspectRatio:false,animation:animDonutBloom,
+      plugins:{
+        legend:{display:true,position:'bottom',labels:{padding:12,font:{size:11},usePointStyle:true,pointStyle:'circle',boxWidth:8}},
+        tooltip:{callbacks:{label:ctx=>' '+ctx.label+': '+ctx.parsed.toLocaleString()+' ('+((ctx.parsed/658127)*100).toFixed(1)+'%)'}}
+      }
+    },
+    plugins:[{
+      id:'centerText1',
+      afterDraw(chart){
+        const{ctx,chartArea}=chart;
+        const cx=(chartArea.left+chartArea.right)/2, cy=(chartArea.top+chartArea.bottom)/2;
+        ctx.save();
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.font="700 22px 'Geist Mono',ui-monospace,monospace";ctx.fillStyle='#1F2420';
+        ctx.fillText('658K',cx,cy-8);
+        ctx.font="500 10px 'Geist',system-ui,sans-serif";ctx.fillStyle='#8E9289';
+        ctx.fillText('USERS',cx,cy+12);
+        ctx.restore();
+      }
+    }]
+  });
+
+  // PV/UV
+  window.CHART_REGISTRY['ch-pvuv'] = new Chart(document.getElementById('ch-pvuv'),{
+    type:'bar',
+    data:{labels:PV_UV.labels,datasets:[
+      {label:'Page Views (M)',data:PV_UV.pv.map(v=>v/1e6),backgroundColor:ctx=>{
+        const c=ctx.chart.ctx, area=ctx.chart.chartArea;
+        const isSurge = ctx.dataIndex>=6;
+        return makeGrad(c, area, isSurge?PALETTE.haze:PALETTE.hazeSoft, isSurge?PALETTE.hazeDk:'#A5CDD6');
+      },borderRadius:{topLeft:6,topRight:6,bottomLeft:0,bottomRight:0},yAxisID:'y',order:2,maxBarThickness:44},
+      {label:'Unique Visitors (K)',data:PV_UV.uv.map(v=>v/1e3),type:'line',borderColor:PALETTE.deep,borderWidth:2.5,backgroundColor:'rgba(74,90,75,.08)',fill:false,pointBackgroundColor:PALETTE.deep,pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5,pointHoverRadius:7,tension:.35,yAxisID:'y2',order:1}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},animation:animBarsRise,
+      plugins:{tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+ctx.parsed.y.toFixed(2)}}},
+      scales:{y:{grid:grd,ticks:{callback:v=>v.toFixed(0)+'M'},border:{display:false}},y2:{position:'right',grid:{display:false},ticks:{callback:v=>v.toFixed(0)+'K'},border:{display:false}},x:{grid:{display:false},border:{display:false}}}}
+  });
+
+  // RETENTION
+  window.CHART_REGISTRY['ch-ret'] = new Chart(document.getElementById('ch-ret'),{
+    type:'line',
+    data:{labels:RET.labels,datasets:[
+      {label:'D1 Retention',data:RET.d1,borderColor:PALETTE.haze,backgroundColor:ctx=>{
+        const c=ctx.chart.ctx,area=ctx.chart.chartArea;
+        if(!area) return 'rgba(143,197,210,.1)';
+        const g=c.createLinearGradient(0,area.top,0,area.bottom);
+        g.addColorStop(0,'rgba(143,197,210,.35)');g.addColorStop(1,'rgba(143,197,210,0)');
+        return g;
+      },fill:true,pointBackgroundColor:PALETTE.haze,pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5,pointHoverRadius:7,tension:.35,borderWidth:2.5},
+      {label:'D3 Retention',data:RET.d3,borderColor:PALETTE.blush,backgroundColor:ctx=>{
+        const c=ctx.chart.ctx,area=ctx.chart.chartArea;
+        if(!area) return 'rgba(240,184,165,.08)';
+        const g=c.createLinearGradient(0,area.top,0,area.bottom);
+        g.addColorStop(0,'rgba(240,184,165,.25)');g.addColorStop(1,'rgba(240,184,165,0)');
+        return g;
+      },fill:true,pointBackgroundColor:PALETTE.blush,pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5,pointHoverRadius:7,tension:.35,borderWidth:2.5,borderDash:[6,4],spanGaps:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},animation:animLineTrace,
+      plugins:{tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+(ctx.parsed.y||0).toFixed(1)+'%'}}},
+      scales:{y:{min:50,max:100,grid:grd,ticks:{callback:v=>v+'%'},border:{display:false}},x:{grid:{display:false},border:{display:false}}}}
+  });
+
+  // BEHAVIOR
+  let bhChart=null;
+  function getBD(day){
+    const agg={pv:new Array(24).fill(0),cart:new Array(24).fill(0),fav:new Array(24).fill(0),buy:new Array(24).fill(0)};
+    TS.forEach(([d,h,pv,cart,fav,buy])=>{if(day==='all'||d===day){agg.pv[h]+=pv;agg.cart[h]+=cart;agg.fav[h]+=fav;agg.buy[h]+=buy;}});
+    return agg;
+  }
+  function renderBH(day){
+    const d=getBD(day);
+    const lbl=Array.from({length:24},(_,i)=>String(i).padStart(2,'0')+':00');
+    if(bhChart)bhChart.destroy();
+    bhChart=window.CHART_REGISTRY['ch-bh']=new Chart(document.getElementById('ch-bh'),{
+      type:'line',
+      data:{labels:lbl,datasets:[
+        {label:'Page Views',data:d.pv,borderColor:PALETTE.haze,backgroundColor:ctx=>{
+          const c=ctx.chart.ctx,area=ctx.chart.chartArea;
+          if(!area) return 'rgba(143,197,210,.15)';
+          const g=c.createLinearGradient(0,area.top,0,area.bottom);
+          g.addColorStop(0,'rgba(143,197,210,.32)');g.addColorStop(1,'rgba(143,197,210,.02)');
+          return g;
+        },fill:true,tension:.4,borderWidth:2,pointRadius:0,pointHoverRadius:5,yAxisID:'y'},
+        {label:'Cart',data:d.cart,borderColor:'#E8A86A',backgroundColor:'rgba(232,168,106,.1)',fill:false,tension:.4,borderWidth:2,pointRadius:0,pointHoverRadius:5,yAxisID:'y2'},
+        {label:'Favorites',data:d.fav,borderColor:PALETTE.blush,backgroundColor:'rgba(240,184,165,.08)',fill:false,tension:.4,borderWidth:2,pointRadius:0,pointHoverRadius:5,yAxisID:'y2'},
+        {label:'Purchase',data:d.buy,borderColor:PALETTE.deep,backgroundColor:'rgba(74,90,75,.08)',fill:false,tension:.4,borderWidth:2.5,pointRadius:0,pointHoverRadius:6,yAxisID:'y2'}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},animation:animLineTrace,
+        plugins:{tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+ctx.parsed.y.toLocaleString()}}},
+        scales:{
+          y:{position:'left',grid:grd,ticks:{callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':(v/1e3).toFixed(0)+'K'},border:{display:false}},
+          y2:{position:'right',grid:{display:false},ticks:{callback:v=>v>=1e3?(v/1e3).toFixed(0)+'K':v},border:{display:false}},
+          x:{grid:{display:false},border:{display:false},ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12}}
+        }}
+    });
+  }
+  window.setBD=function(day){
+    document.querySelectorAll('#bh-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick').includes("'"+day+"'")));
+    document.getElementById('bh-title').textContent=day==='all'?'Hourly Behavior · All Days (Aggregated)':'Hourly Behavior · '+day;
+    renderBH(day);
+  };
+  renderBH('all');
+
+  // RFM DONUT
+  window.CHART_REGISTRY['ch-rfm'] = new Chart(document.getElementById('ch-rfm'),{
+    type:'doughnut',
+    data:{labels:RFM.labels,datasets:[{data:RFM.data,backgroundColor:[PALETTE.haze,PALETTE.sage,PALETTE.blush,PALETTE.cream],borderColor:'#fff',borderWidth:3,hoverOffset:10}]},
+    options:{cutout:'62%',responsive:true,maintainAspectRatio:false,animation:animDonutBloom,
+      plugins:{
+        legend:{display:true,position:'right',labels:{padding:14,font:{size:11.5},usePointStyle:true,pointStyle:'circle',boxWidth:8}},
+        tooltip:{callbacks:{label:ctx=>' '+ctx.label+': '+ctx.parsed.toLocaleString()+' ('+((ctx.parsed/658127)*100).toFixed(1)+'%)'}}
+      }
+    },
+    plugins:[{
+      id:'centerText2',
+      afterDraw(chart){
+        const{ctx,chartArea}=chart;
+        const cx=(chartArea.left+chartArea.right)/2,cy=(chartArea.top+chartArea.bottom)/2;
+        ctx.save();
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.font="700 22px 'Geist Mono',ui-monospace,monospace";ctx.fillStyle='#1F2420';
+        ctx.fillText('658K',cx,cy-8);
+        ctx.font="500 10px 'Geist',system-ui,sans-serif";ctx.fillStyle='#8E9289';
+        ctx.fillText('SEGMENTED',cx,cy+12);
+        ctx.restore();
+      }
+    }]
+  });
+
+  // PRODUCT BARS — transform-based animation (no layout thrash)
+  function renderBars(cid,data,c1,c2){
+    const max=data[0].pv;
+    document.getElementById(cid).innerHTML=data.map((d,i)=>{
+      const w=(d.pv/max)*100;
+      const val=d.pv>=1e6?(d.pv/1e6).toFixed(1)+'M':(d.pv/1e3).toFixed(0)+'K';
+      return`<div class="pb-row"><span class="pb-rank" aria-hidden="true">${i+1<10?'0'+(i+1):i+1}</span><div class="pb-lbl">${d.id}</div><div class="pb-bg"><div class="pb-fill" style="width:${w}%;transform:scaleX(0);background:linear-gradient(90deg,${c1},${c2})" data-w="${w}"><span class="pb-val">${val}</span></div></div></div>`;
+    }).join('');
+    requestAnimationFrame(()=>{
+      document.querySelectorAll('#'+cid+' .pb-fill').forEach((el,i)=>{
+        setTimeout(()=>{ el.style.transform = 'scaleX(1)'; }, i*40);
+      });
+    });
+  }
+  renderBars('prod-bars',TOP_PROD,PALETTE.haze,PALETTE.hazeSoft);
+  renderBars('cat-bars',TOP_CAT,PALETTE.sageDk,PALETTE.sage);
+
+  // CONV RATE
+  const cc=CAT_CVR.slice().sort((a,b)=>b.pv-a.pv).slice(0,10);
+  window.CHART_REGISTRY['ch-conv'] = new Chart(document.getElementById('ch-conv'),{
+    type:'bar',
+    data:{labels:cc.map(d=>d.id.replace('CAT-','')),datasets:[
+      {label:'Page Views (K)',data:cc.map(d=>d.pv/1e3),backgroundColor:ctx=>{
+        const c=ctx.chart.ctx,area=ctx.chart.chartArea;
+        return makeGrad(c,area,'#A5CDD6',PALETTE.haze);
+      },borderRadius:6,yAxisID:'y',maxBarThickness:38,order:2},
+      {label:'CVR (%)',data:cc.map(d=>d.cvr),type:'line',borderColor:PALETTE.blush,backgroundColor:'rgba(240,184,165,.1)',pointBackgroundColor:PALETTE.blush,pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5,pointHoverRadius:7,tension:.35,borderWidth:2.5,yAxisID:'y2',order:1}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,animation:animBarsRise,
+      scales:{y:{grid:grd,ticks:{callback:v=>v+'K'},border:{display:false}},y2:{position:'right',grid:{display:false},ticks:{callback:v=>v+'%'},min:0,border:{display:false}},x:{grid:{display:false},border:{display:false},ticks:{font:{size:10}}}}}
+  });
+
+  // QUADRANT
+  const avgPV=CAT_CVR.reduce((s,d)=>s+d.pv,0)/CAT_CVR.length;
+  const avgCVR=CAT_CVR.reduce((s,d)=>s+d.cvr,0)/CAT_CVR.length;
+  const qColors=CAT_CVR.map(d=>{
+    if(d.pv>=avgPV&&d.cvr>=avgCVR)return PALETTE.haze;
+    if(d.pv<avgPV&&d.cvr>=avgCVR)return PALETTE.sage;
+    if(d.pv>=avgPV&&d.cvr<avgCVR)return PALETTE.cream;
+    return PALETTE.blush;
+  });
+  window.CHART_REGISTRY['ch-quad'] = new Chart(document.getElementById('ch-quad'),{
+    type:'scatter',
+    data:{datasets:[{label:'Categories',data:CAT_CVR.map(d=>({x:d.pv/1e3,y:d.cvr,label:d.id})),backgroundColor:qColors.map(c=>c+'CC'),borderColor:qColors,pointRadius:CAT_CVR.map(d=>Math.max(8,Math.min(22,d.pv/100000))),borderWidth:2,hoverRadius:CAT_CVR.map(d=>Math.max(10,Math.min(24,d.pv/100000)))}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:animScatterPop,
+      plugins:{tooltip:{callbacks:{label:ctx=>' '+ctx.raw.label+' | PV: '+(ctx.raw.x).toFixed(0)+'K | CVR: '+ctx.raw.y.toFixed(2)+'%'}}},
+      scales:{
+        x:{grid:grd,title:{display:true,text:'Page Views (K) →',color:'#8E9289',font:{size:11,weight:'500'}},ticks:{callback:v=>v+'K'},border:{display:false}},
+        y:{grid:grd,title:{display:true,text:'Conversion Rate (%) →',color:'#8E9289',font:{size:11,weight:'500'}},ticks:{callback:v=>v+'%'},border:{display:false}}
+      }},
+    plugins:[{
+      id:'quadLines',
+      beforeDatasetsDraw(chart){
+        const{ctx,chartArea,scales}=chart;
+        const xP=scales.x.getPixelForValue(avgPV/1e3);
+        const yP=scales.y.getPixelForValue(avgCVR);
+        ctx.save();
+        ctx.strokeStyle='rgba(142,146,137,.25)';
+        ctx.lineWidth=1; ctx.setLineDash([4,4]);
+        ctx.beginPath();
+        ctx.moveTo(xP,chartArea.top);ctx.lineTo(xP,chartArea.bottom);
+        ctx.moveTo(chartArea.left,yP);ctx.lineTo(chartArea.right,yP);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font="600 10px 'Geist Mono',ui-monospace,monospace";
+        ctx.fillStyle='rgba(142,146,137,.65)';
+        ctx.textAlign='left';
+        ctx.fillText('★ STAR', xP+8, chartArea.top+14);
+        ctx.fillText('↗ GROWTH', chartArea.left+8, chartArea.top+14);
+        ctx.fillText('⚠ TRAFFIC TRAP', xP+8, chartArea.bottom-8);
+        ctx.fillText('↓ LAGGARD', chartArea.left+8, chartArea.bottom-8);
+        ctx.restore();
+      }
+    }]
+  });
+
+  // FUNNEL
+  (function renderFunnel(){
+    var steps=[
+      {label:'Product View',sub:'Top-of-funnel entries',count:67616581,pct:'100%',dropoff:null},
+      {label:'Cart / Wishlist',sub:'Added to cart or wishlist',count:4760956,pct:'7.05%',dropoff:'92.95%'},
+      {label:'Completed Purchase',sub:'Confirmed transactions',count:1232681,pct:'1.82%',dropoff:'5.23%'}
+    ];
+    var grads=[
+      cssVar('--grad-haze'),
+      cssVar('--grad-sage'),
+      cssVar('--grad-blush')
+    ];
+    var bg=['rgba(143,197,210,.08)','rgba(200,216,196,.14)','rgba(240,184,165,.14)'];
+    var bd=['rgba(143,197,210,.35)','rgba(159,179,155,.4)','rgba(216,139,116,.35)'];
+    var widths=[100,52,28];
+    var parts=[];
+    for(var i=0;i<steps.length;i++){
+      var s=steps[i];
+      var cnt=s.count>=1e6?(s.count/1e6).toFixed(2)+'M':(s.count/1e3).toFixed(1)+'K';
+      parts.push(
+        '<div class="flex items-center gap-4">'+
+          '<div class="w-[200px] shrink-0 flex justify-end">'+
+            '<div class="funnel-bar relative overflow-hidden flex flex-col items-center justify-center gap-0 h-[48px] rounded-[8px]" style="width:'+widths[i]+'%;background:'+grads[i]+';transform-origin:right center;transition:transform .8s cubic-bezier(.2,.7,.2,1) '+(i*0.18)+'s,opacity .6s ease '+(i*0.18)+'s;box-shadow:0 2px 6px rgba(30,35,30,.1),inset 0 1px 0 rgba(255,255,255,.3)">'+
+              '<span class="relative z-10 text-[13px] font-bold font-mono text-white leading-none" style="letter-spacing:-.01em">'+cnt+'</span>'+
+              '<span class="relative z-10 text-[8px] text-white/75 font-medium" style="letter-spacing:.08em">USERS</span>'+
+            '</div>'+
+          '</div>'+
+          '<div class="flex-1 rounded-[10px] px-3 py-2 border" style="background:'+bg[i]+';border-color:'+bd[i]+'">'+
+            '<div class="text-[12px] font-semibold text-ink-1 leading-tight">'+s.label+'</div>'+
+            '<div class="text-[10.5px] text-ink-3 leading-tight">'+s.sub+'</div>'+
+            '<div class="mt-1 flex items-baseline gap-1.5">'+
+              '<span class="text-[18px] font-bold font-mono text-ink-1 leading-none" style="letter-spacing:-.02em">'+s.pct+'</span>'+
+              '<span class="text-[10px] text-ink-3">of sessions</span>'+
+            '</div>'+
+          '</div>'+
+        '</div>'
+      );
+      if(i<steps.length-1){
+        parts.push(
+          '<div class="flex items-center gap-4 h-[14px]">'+
+            '<div class="w-[200px] shrink-0 flex justify-end items-center">'+
+              '<div style="width:'+Math.round((widths[i]+widths[i+1])/2)+'%;height:2px;background:repeating-linear-gradient(90deg,rgba(142,146,137,.35) 0 4px,transparent 4px 8px)"></div>'+
+            '</div>'+
+            '<div class="flex-1 flex items-center">'+
+              '<span class="text-[11px] text-ink-3 font-mono" style="letter-spacing:.02em">'+
+                '↓ '+steps[i+1].dropoff+' drop-off'+
+              '</span>'+
+            '</div>'+
+          '</div>'
+        );
+      }
+    }
+    document.getElementById('funnel-viz').innerHTML=parts.join('');
+  })();
+
+  // Force all charts to recalculate after layout settles
+  window.addEventListener('load',()=>{
+    setTimeout(()=>{
+      Object.values(window.CHART_REGISTRY).forEach(c=>{
+        try{
+          const parent = c.canvas.parentElement;
+          if(parent.clientWidth>0 && parent.clientHeight>0){
+            c.resize(parent.clientWidth, parent.clientHeight);
+          }
+          c.update();
+        }catch(e){}
+      });
+    }, 400);
+  });
+}
+
+// Wait for Tailwind to apply before initializing charts (so canvas sizes are correct)
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', () => setTimeout(initCharts, 100));
+}else{
+  setTimeout(initCharts, 100);
+}
+</script>
+
+</body>
+</html>
